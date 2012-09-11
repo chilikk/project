@@ -1,2 +1,2 @@
-to run the project:
+to run the project:<br />
 $ python main.py
