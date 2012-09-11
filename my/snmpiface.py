@@ -3,11 +3,11 @@ from pyasn1.type.univ import ObjectIdentifier
 
 class SnmpIface(object):
 
-	defaults = { 	'host'		: 'localhost',
+	defaults = { 	'host'		: '192.168.1.10',
 			'port'		: 161,			
-			'securityName' 	: 'authOnlyUser',
-			'authKey'	: 'testtest',
-			'privKey'	: 'testtest',
+			'securityName' 	: 'EP2300_student',
+			'authKey'	: 'netmanagement',
+			'privKey'	: 'netmanagement',
 			'authProtocol'	: 'MD5',
 			'privProtocol'	: 'no' }
 	
@@ -54,7 +54,7 @@ class SnmpIface(object):
 	def test(self):
 		try:
 			print "sysName: %s" % self.getObject(self.oid_sysName)
-		except SnmpException as e:
+		except SnmpException, e:
 			print e.message
 			return
 	
