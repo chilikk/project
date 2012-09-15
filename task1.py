@@ -11,10 +11,10 @@ def list_union(a,b):
 def getRouterInfo(host):
 	router = SnmpIface(host = host)
 	routername = router.getObject(router.oid_sysName)
-	num_ifs = router.getObject(router.oid_ifNumber)
-	interfaces = [ value for key,value in router.getBulk(router.oid_ifDescr,num_ifs) ]
-	neighbours = [ value for key,value in router.getSubtree(router.oid_ipRouteNextHop) ]
-	return { 'name':routername, 'interfaces':interfaces, 'neighbours':neighbours }
+	num_ifs = int(router.getObject(router.oid_ifNumber))
+	interfaces = router.getBulk(router.oid_ifDescr,num_ifs).values()
+	neighbours = router.getSubtree(router.oid_ipRouteNextHop).values()
+	return { 'name':routername, 'interfaces':interfaces, 'neighbours': list(set(neighbours)) }
 
 def printRouterInfo(info):
 	print "        hostname: %s" % info['name']
