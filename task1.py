@@ -28,5 +28,5 @@ def printRouterInfo(info):
 	print
 
 if __name__=='__main__':
-	info = getRouterInfo('192.168.10.1')
+	info = getRouterInfo('192.168.1.10')
 	printRouterInfo(info)
