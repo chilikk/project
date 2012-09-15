@@ -14,13 +14,14 @@ def getRouterInfo(host):
 	num_ifs = int(router.getObject(router.oid_ifNumber))
 	interfaces = router.getBulk(router.oid_ifDescr,num_ifs).values()
 	neighbours = router.getSubtree(router.oid_ipRouteNextHop).values()
-	return { 'name':routername, 'interfaces':interfaces, 'neighbours': list(set(neighbours)) }
+	return { 'ip':host, 'name':routername, 'interfaces':interfaces, 'neighbours': list(set(neighbours)) }
 
 def printRouterInfo(info):
+	print "Router %s:" % info['ip']
 	print "        hostname: %s" % info['name']
-	print "        interfaces: ",
+	print "        interfaces: "
 	for item in info['interfaces']:
-		print item,
+		print "                %s" % item
 	print
 	print "        neighbours: "
 	for item in info['neighbours']:
@@ -28,5 +29,8 @@ def printRouterInfo(info):
 	print
 
 if __name__=='__main__':
-	info = getRouterInfo('192.168.1.10')
-	printRouterInfo(info)
+	routers = ['192.168.1.10']
+	for router in routers:
+		info = getRouterInfo(router)
+		printRouterInfo(info)
+		routers = list_union(routers,info['neighbours'])
