@@ -23,8 +23,8 @@ def printRouterInfo(info):
 	print "        IP addresses: "
 	for item in info['ips']:
 		print "                %s" % item
-	print "        interfaces: "
-	for item in info['Interfaces']:
+	print "        Interfaces: "
+	for item in info['interfaces']:
 		print "                %s" % item
 	print "        Link-layer neighbours: "
 	for item in info['neighbours']:
