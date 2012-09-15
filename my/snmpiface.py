@@ -15,6 +15,7 @@ class SnmpIface(object):
 	oid_sysName = "1.3.6.1.2.1.1.5.0"
 	oid_ifNumber = "1.3.6.1.2.1.2.1.0"
 	oid_ifDescr = "1.3.6.1.2.1.2.2.1.2"
+	oid_ipAdEntAddr = "1.3.6.1.2.1.4.20.1.1"
 
 	authProtocolsList = { 	'MD5' : cmdgen.usmHMACMD5AuthProtocol,
 				'SHA' : cmdgen.usmHMACSHAAuthProtocol,
