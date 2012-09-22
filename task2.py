@@ -2,9 +2,8 @@
 
 from task1mp import routers
 from multiprocessing import Pool
-import time
+import time, sys
 if __debug__:
-	import sys
 	from task1mp import starttime
 
 def poll(router):
@@ -27,12 +26,14 @@ if __name__=='__main__':
 			difftime = avgtime-prevtime
 			bandwidth = int((totload-prevload)/difftime)
 			net_states.append((difftime,bandwidth))
-			print "%f\t\t%d\t\t%d" % (difftime, bandwidth ,totload)
+			print "+%f\t\t%d" % (difftime, bandwidth)
 		else:
-			print "start\t\t\t%d" % totload
+			sys.stderr.write("start\ntime difference\ttotal network bandwidth\n")
 		prevtime, prevload = (avgtime, totload)
 		try:
-			time.sleep(nexttime-time.time())
+			sleeptime = nexttime-time.time()
+			print sleeptime
+			time.sleep(sleeptime)
 		except Exception:
 			pass
 	print net_states
