@@ -1,6 +1,6 @@
 #!/usr/bin/python -O
 
-from task1mp import routers,pool
+from task1mp import routers
 
 def poll(router):
 	router.pollLinksLoad()
