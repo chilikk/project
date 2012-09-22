@@ -1,4 +1,5 @@
 from time import time
+from copy import deepcopy
 
 class Router(object):
 	def __init__(self,ip):
@@ -9,7 +10,7 @@ class Router(object):
 		self.num_ifs = None
 		self.interfaces = None
 		from snmpiface import SnmpIface
-		self.snmpiface = SnmpIface(host=ip)
+		self.snmpiface = deepcopy(SnmpIface(host=ip))
 
 	def __str__(self):
 		result = "Router %s:\n" % (self.name or 'N/A')

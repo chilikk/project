@@ -1,5 +1,4 @@
 from my.router import Router
-from copy import deepcopy
 
 class Topology(object):
 	def __init__(self,starting_router):
