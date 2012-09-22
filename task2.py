@@ -9,7 +9,8 @@ if __debug__:
 
 def poll(router):
 	polltime, load = router.pollLinksLoad()
-	sys.stderr.write("Polled %s (links load %s): %f\n" % (router.host,load,polltime-starttime))
+	if __debug__:
+		sys.stderr.write("Polled %s (links load %s): %f\n" % (router.host,load,polltime-starttime))
 	return router
 
 if __name__=='__main__':

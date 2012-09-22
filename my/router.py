@@ -1,16 +1,14 @@
 from time import time
 
 class Router(object):
-	host = None
-	name = None
-	ips = None
-	neighbours = None
-	num_ifs = None
-	interfaces = None
-	linksLoad = {}
-
 	def __init__(self,ip):
 		self.host = ip
+		self.name = None
+		self.ips = None
+		self.neighbours = None
+		self.num_ifs = None
+		self.interfaces = None
+		self.linksLoad = []
 
 	def __str__(self):
 		result = "Router %s:\n" % self.name
@@ -26,8 +24,6 @@ class Router(object):
 		return result
 
 class RouterSnmp(Router):
-	snmpiface = None	
-
 	def __init__(self, ip):
 		super(RouterSnmp,self).__init__(ip)
 		from snmpiface import SnmpIface
@@ -51,5 +47,5 @@ class RouterSnmp(Router):
 			self.getNumIfs()
 	        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
 		currTime = time()
-	        self.linksLoad[currTime]=currLinksLoad
+	        self.linksLoad.append((currTime,currLinksLoad))
 		return (currTime, currLinksLoad)
