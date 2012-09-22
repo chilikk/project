@@ -21,7 +21,7 @@ if __name__=='__main__':
 		for polltime, loads in pollresult:
 			avgtime+=polltime
 			for load in loads:
-				totload+=load
+				totload+=int(load)
 		avgtime/=len(pollresult)
 		if prevtime and prevload:
 			difftime = avgtime-prevtime
