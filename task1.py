@@ -1,4 +1,4 @@
-#!/usr/bin/python -O
+#!/usr/bin/python
 
 from my.router import Router
 from multiprocessing import Pool
@@ -33,8 +33,9 @@ def getRouterInfo(router):
 
 def debugmsg(msg):
 	if __debug__:
-		if starttime:
-			global starttime = time()
+		if not starttime:
+			global starttime
+			starttime = time()
 			now = 0
 		else:
 			now = time()-startime

@@ -1,4 +1,4 @@
-#!/usr/bin/python -O
+#!/usr/bin/python
 
 from task1 import routers
 import time, sys
