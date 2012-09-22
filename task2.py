@@ -17,7 +17,7 @@ if __name__=='__main__':
 	for i in range(20):
 		nexttime = time.time()+10
 		pollresult = pool.map(poll,routers)
-		avgtime, totload = (.0,.0)
+		avgtime, totload = (.0,0)
 		for polltime, loads in pollresult:
 			avgtime+=polltime
 			for load in loads:
