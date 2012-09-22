@@ -26,22 +26,19 @@ def getTopology():
 	return routers
 
 def getRouterInfo(router):
-	print router
 	router.getInfo()
-	print router
 	return router
 
 def debugmsg(msg):
 	if __debug__:
+		global starttime
 		if not starttime:
-			global starttime
 			starttime = time()
 			now = 0
 		else:
 			now = time()-starttime
 		sys.stderr.write("%f :: %s\n" % (now, msg))
 
-starttime = None
 debugmsg('Started')
 routers = getTopology()
 debugmsg('Topology identified')
