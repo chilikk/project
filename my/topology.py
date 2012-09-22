@@ -1,4 +1,5 @@
 from my.router import Router
+from copy import deepcopy
 
 class Topology(object):
 	def __init__(self,starting_router):
@@ -16,6 +17,6 @@ class Topology(object):
 				if not item in self.tovisit and not item in self.visited:
 					self.tovisit.append(item)
 			self.visited += router.ips
-			self.routers.append(router)
+			self.routers.append(deepcopy(router))
 		del(self.tovisit)
 		del(self.visited)
