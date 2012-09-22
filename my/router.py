@@ -1,3 +1,7 @@
+from time import time
+if __debug__:
+	import sys
+
 class Router(object):
 	host = None
 	name = None
@@ -5,6 +9,7 @@ class Router(object):
 	neighbours = None
 	num_ifs = None
 	interfaces = None
+	linksLoad = {}
 
 	def __init__(self,ip):
 		self.host = ip
@@ -21,7 +26,7 @@ class Router(object):
 	        for item in self.neighbours:
 	                result+="                %s\n" % item
 		return result
-	
+
 class RouterSnmp(Router):
 	snmpiface = None	
 
@@ -35,9 +40,20 @@ class RouterSnmp(Router):
 	        self.ips = self.snmpiface.getSubtree(self.snmpiface.oid_ipAdEntAddr).values()
 	        self.neighbours = list(set(self.neighbours).difference(self.ips))
 
+	def getNumIfs(self):
+	        self.num_ifs = int(self.snmpiface.getObject(self.snmpiface.oid_ifNumber))
+
 	def getInfo(self):
 		self.name = self.snmpiface.getObject(self.snmpiface.oid_sysName)
-	        self.num_ifs = int(self.snmpiface.getObject(self.snmpiface.oid_ifNumber))
+		self.getNumIfs()
 	        self.interfaces = self.snmpiface.getBulk(self.snmpiface.oid_ifDescr,self.num_ifs).values()
 
+	def pollLinksLoad(self):
+		if not self.num_ifs:
+			self.getNumIfs()
+	        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
+		currTime = time()
+	        linksLoad[currTime]=currLinksLoad
+		if __debug__:
+			sys.stderr.write("Polling %s (%s): %f\n" % (self.host,currLinksLoad,currTime-starttime))
 

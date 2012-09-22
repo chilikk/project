@@ -1,7 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python -O
 
 from my.router import RouterSnmp
 from multiprocessing import Pool
+
+if __debug__:
+	import sys
+	from time import time
 
 def list_union(a,b):
 	for item in b:
@@ -25,10 +29,17 @@ def getRouterInfo(router):
 	router.getInfo()
 	return router
 
+if __debug__:
+	starttime = time()
+	sys.stderr.write("Started: %f\n", 0)
+routers = getTopology()
+if __debug__:
+	sys.stderr.write("Topology identified: %f\n", (time()-starttime))
+pool = Pool(processes = len(routers))
 if __name__=='__main__':
-	routers = getTopology()
-	pool = Pool(processes = len(routers))
 	routers = pool.map(getRouterInfo,routers)
+	if __debug__:
+		sys.stderr.write("Routers info collected: %f\n", (time()-starttime))
 	for router in routers:
 		print router
 		print
