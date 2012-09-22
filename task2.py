@@ -30,5 +30,6 @@ if __name__=='__main__':
 			print "%f\t\t%d\t\t%d" % (difftime, bandwidth ,totload)
 		else:
 			print "start\t\t\t%d" % totload
+		prevtime, prevload = (avgtime, totload)
 		time.sleep(nexttime-time.time())
 	print net_states
