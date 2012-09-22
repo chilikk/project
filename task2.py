@@ -1,6 +1,7 @@
 #!/usr/bin/python -O
 
 from task1mp import routers
+from multiprocessing import Pool
 
 def poll(router):
 	router.pollLinksLoad()
