@@ -18,16 +18,17 @@ if __name__=='__main__':
 		nexttime = time.time()+10
 		pollresult = pool.map(poll,routers)
 		avgtime, totload = (.0,.0)
-		for polltime, load in pollresult:
+		for polltime, loads in pollresult:
 			avgtime+=polltime
-			totload+=load
+			for load in loads:
+				totload+=load
 		avgtime/=len(pollresult)
 		if prevtime and prevload:
 			difftime = avgtime-prevtime
 			bandwidth = int((totload-prevload)/difftime)
 			net_states.append((difftime,bandwidth))
 			print "%f\t\t%d\t\t%d" % (difftime, bandwidth ,totload)
-		else
+		else:
 			print "start\t\t\t%d" % totload
 		time.sleep(nexttime-time.time())
 	print net_states
