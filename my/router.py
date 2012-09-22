@@ -47,5 +47,5 @@ class RouterSnmp(Router):
 			self.getNumIfs()
 	        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
 		currTime = time()
-	        self.linksLoad.append((currTime,currLinksLoad))
+	        #self.linksLoad.append((currTime,currLinksLoad))
 		return (currTime, currLinksLoad)
