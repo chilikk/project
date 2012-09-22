@@ -31,5 +31,8 @@ if __name__=='__main__':
 		else:
 			print "start\t\t\t%d" % totload
 		prevtime, prevload = (avgtime, totload)
-		time.sleep(nexttime-time.time())
+		try:
+			time.sleep(nexttime-time.time())
+		except Exception:
+			pass
 	print net_states
