@@ -82,9 +82,9 @@ class SnmpIface(object):
 	def parseResponse(self,response,oid=False):
 		result={}
 		for row in response:
-			for name, value in row:
+			for name in row:
 				if not oid or oid == name.prettyPrint()[:len(oid)]:
-					result[name.prettyPrint()]=value.prettyPrint()
+					result[name.prettyPrint()]=response[name].prettyPrint()
 		return result
 
 	def getSubtree(self,oid):
