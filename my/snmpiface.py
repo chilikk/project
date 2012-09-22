@@ -30,7 +30,7 @@ class SnmpIface(object):
 				'no'      : cmdgen.usmNoPrivProtocol }
 
 	def __init__(self,**kwargs):
-		host = kwargs['host'] if 'host' in kwargs else self.defaults['host']
+		self.host = kwargs['host'] if 'host' in kwargs else self.defaults['host']
 		port = int(kwargs['port']) if 'port' in kwargs else int(self.defaults['port'])
 
 		securityName = kwargs['securityName'] if 'securityName' in kwargs else self.defaults['securityName']
@@ -45,14 +45,10 @@ class SnmpIface(object):
 			authParameters['authKey'] = authKey
 		if privProtocol != self.privProtocolsList['no']:
 			authParameters['privKey'] = privKey
-		authentication = cmdgen.UsmUserData(securityName, **authParameters)
+		self.authentication = cmdgen.UsmUserData(securityName, **authParameters)
 
 		transportParameters = (host,port)
-		transport = cmdgen.UdpTransportTarget(transportParameters)
-
-		setattr(self.__class__, 'authentication', authentication)
-		setattr(self.__class__, 'transport', transport)
-		setattr(self.__class__, 'host', host)
+		self.transport = cmdgen.UdpTransportTarget(transportParameters)
 	
 	def test(self):
 		try:
