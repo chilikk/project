@@ -33,8 +33,8 @@ def getRouterInfo(router):
 
 def debugmsg(msg):
 	if __debug__:
+		global starttime
 		if not starttime:
-			global starttime
 			starttime = time()
 			now = 0
 		else:
