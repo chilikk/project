@@ -1,3 +1,5 @@
+#!/usr/bin/python -O
+
 from task1mp import routers,pool
 
 def poll(router):
