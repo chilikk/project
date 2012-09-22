@@ -80,7 +80,6 @@ class SnmpIface(object):
 		return response
 
 	def parseResponse(self, response,oid=False):
-		print response
 		result={}
 		for row in response:
 			for name,value in row:
@@ -100,7 +99,7 @@ class SnmpIface(object):
 			response = self._getObj(oid,'get')
 		except Exception:
 			raise
-		result = self.parseResponse(response,oid)
+		result = self.parseResponse((response,),oid)
 		if result:
 			return result.values()[0]
 		raise Exception('Object with given OID does not exist or something went wrong!')
