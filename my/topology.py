@@ -6,7 +6,7 @@ class Topology(object):
 		self.visited = []
 		self.routers = []
 	
-	def get():
+	def get(self):
 		for host in self.tovisit:
 			if host in self.visited:
 				continue
