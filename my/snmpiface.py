@@ -51,6 +51,7 @@ class SnmpIface(object):
 
 		setattr(self.__class__, 'authentication', authentication)
 		setattr(self.__class__, 'transport', transport)
+		setattr(self.__class__, 'host', host)
 	
 	def test(self):
 		try:
@@ -78,38 +79,37 @@ class SnmpIface(object):
 		
 		return response
 
+	def parseResponse(response,oid=False):
+		result={}
+		for row in response:
+			for name, value in row:
+				if not oid or oid == name.prettyPrint()[:len(oid)]:
+					result[name.prettyPrint()]=value.prettyPrint()
+		return result
+
 	def getSubtree(self,oid):
-		result = {}
 		try:
 			response = self._getObj(oid,'getnext')
 		except Exception:
 			raise
-		for row in response:
-			for name, value in row:
-				result[name.prettyPrint()]=value.prettyPrint()
-		return result
+		return parseResponse(response)
 
 	def getObject(self,oid):
 		try:
-			name, value = self._getObj(oid,'get')[0]
+			response = self._getObj(oid,'get')
 		except Exception:
 			raise
-		if name.prettyPrint() == oid:
-			return value.prettyPrint()
-		else:
-			raise Exception('Object with given OID does not exist or something went wrong!')
+		result = parseResponse(response,oid)
+		if result:
+			return result.values()[0]
+		raise Exception('Object with given OID does not exist or something went wrong!')
 
 	def getBulk(self, oid, bulkSize):
-		result = {}
 		try:
 			response = self._getObj(oid,'getbulk', bulkSize = bulkSize+1)
 		except Exception:
 			raise
-		for row in response:
-			for name, value in row:
-				if oid == name.prettyPrint()[:len(oid)]:
-					result[name.prettyPrint()]=value.prettyPrint()
-		return result
+		return parseResponse(response,oid)
 
 
 class SnmpException(Exception):
