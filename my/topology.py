@@ -11,12 +11,12 @@ class Topology(object):
 		for host in self.tovisit:
 			if host in self.visited:
 				continue
-			router = Router(host)
+			router = deepcopy(Router(host))
 			router.getTopologyInfo()
 			for item in router.neighbours:
 				if not item in self.tovisit and not item in self.visited:
 					self.tovisit.append(item)
 			self.visited += router.ips
-			self.routers.append(deepcopy(router))
+			self.routers.append(router)
 		del(self.tovisit)
 		del(self.visited)
