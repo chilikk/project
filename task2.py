@@ -1,9 +1,9 @@
 #!/usr/bin/python -O
 
-from task1mp import routers
+from task1 import routers
 import time, sys
 if __debug__:
-	from task1mp import starttime
+	from task1 import starttime
 from my.polling import Polling
 
 if __name__=='__main__':
