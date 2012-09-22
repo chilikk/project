@@ -54,17 +54,17 @@ if __name__=='__main__':
 	if __debug__: 
 		from time import time
 		starttime = time()
-		print "Program started: %f" % starttime
+		print "Program started: %f" % 0
 	routerinfo = getRouterTopologyInfo()
 	if __debug__:
-		print "Topology discovered: %f" % time()-starttime
+		print "Topology discovered: %f" % (time()-starttime)
 	routers = routerinfo.keys()
 	pool = Pool(processes = len(routers))
 	if __debug__:
-		print "Pool started: %f" % time()-starttime
+		print "Pool started: %f" % (time()-starttime)
 	info = pool.map(getRouterInfo,routers)
 	if __debug__:
-		print "Pool finished: %f" % time()-starttime
+		print "Pool finished: %f" % (time()-starttime)
 	info = zip(routers,info)
 	for router, data in info:
 		for key in data.keys():
