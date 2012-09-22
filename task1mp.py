@@ -25,18 +25,9 @@ def getRouterInfo(router):
 	router.getInfo()
 
 if __name__=='__main__':
-	if __debug__: 
-		starttime = time()
-		sys.stderr.write("Program started: %f\n" % 0)
 	routers = getTopology()
-	if __debug__:
-		sys.stderr.write("Topology discovered: %f\n" % (time()-starttime))
 	pool = Pool(processes = len(routers))
-	if __debug__:
-		sys.stderr.write("Pool started: %f\n" % (time()-starttime))
 	info = pool.map(getRouterInfo,routers)
-	if __debug__:
-		sys.stderr.write("Pool finished: %f\n" % (time()-starttime))
 	for router in routers:
 		print router
 		print
