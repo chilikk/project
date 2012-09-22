@@ -42,7 +42,10 @@ class Router(object):
 	        self.num_ifs = int(self.snmpiface.getObject(self.snmpiface.oid_ifNumber))
 
 	def getInfo(self):
+		print self.snmpiface
+		
 		self.name = self.snmpiface.getObject(self.snmpiface.oid_sysName)
+		print self.name
 		self.getNumIfs()
 	        self.interfaces = self.snmpiface.getBulk(self.snmpiface.oid_ifDescr,self.num_ifs).values()
 
