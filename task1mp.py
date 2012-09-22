@@ -35,8 +35,8 @@ if __debug__:
 routers = getTopology()
 if __debug__:
 	sys.stderr.write("Topology identified: %f\n" % (time()-starttime))
-pool = Pool(processes = len(routers))
 if __name__=='__main__':
+	pool = Pool(processes = len(routers))
 	routers = pool.map(getRouterInfo,routers)
 	if __debug__:
 		sys.stderr.write("Routers info collected: %f\n" % (time()-starttime))

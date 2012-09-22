@@ -7,4 +7,5 @@ def poll(router):
 	return router
 
 if __name__=='__main__':
+	pool = Pool(processes = len(routers))
 	routers = pool.map(poll,routers)
