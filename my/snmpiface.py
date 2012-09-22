@@ -79,7 +79,7 @@ class SnmpIface(object):
 		
 		return response
 
-	def parseResponse(response,oid=False):
+	def parseResponse(self,response,oid=False):
 		result={}
 		for row in response:
 			for name, value in row:
