@@ -8,19 +8,27 @@ class Router(object):
 		self.neighbours = None
 		self.num_ifs = None
 		self.interfaces = None
-		self.linksLoad = []
 
 	def __str__(self):
-		result = "Router %s:\n" % self.name
-	        result += "        IP addresses:\n"
-	        for item in self.ips:
-	                result+="                %s\n" % item
-	        result+="        Interfaces:\n"
-	        for item in self.interfaces:
-	                result+="                %s\n" % item
-	        result+="        Link-layer neighbours:\n"
-	        for item in self.neighbours:
-	                result+="                %s\n" % item
+		result = "Router %s:\n" % (self.name or 'N/A')
+		try:
+		        result += "        IP addresses:\n"
+		        for item in self.ips:
+	        	        result+="                %s\n" % item
+		except Exception:
+			pass
+		try:
+		        result+="        Interfaces:\n"
+		        for item in self.interfaces:
+		                result+="                %s\n" % item
+		except Exception:
+			pass
+		try:
+		        result+="        Link-layer neighbours:\n"
+		        for item in self.neighbours:
+		                result+="                %s\n" % item
+		except Exception:
+			pass
 		return result
 
 class RouterSnmp(Router):
@@ -47,5 +55,4 @@ class RouterSnmp(Router):
 			self.getNumIfs()
 	        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
 		currTime = time()
-	        #self.linksLoad.append((currTime,currLinksLoad))
 		return (currTime, currLinksLoad)
