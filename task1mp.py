@@ -23,12 +23,18 @@ def getTopologyInfo(host):
 
 
 def getRouterInfo(host):
+	router = SnmpIface(host = host)
 	if __debug__:
 		sys.stderr.write('Getting info for %s: %f\n' % (host,time()-starttime))
-	router = SnmpIface(host = host)
 	routername = router.getObject(router.oid_sysName)
+	if __debug__:
+		sys.stderr.write('1st response got from %s: %f\n' % (host,time()-starttime))
 	num_ifs = int(router.getObject(router.oid_ifNumber))
+	if __debug__:
+		sys.stderr.write('2nd response got from %s: %f\n' % (host,time()-starttime))
 	interfaces = router.getBulk(router.oid_ifDescr,num_ifs).values()
+	if __debug__:
+		sys.stderr.write('3rd response got from %s. Finished: %f\n' % (host,time()-starttime))
 	return { 'name':routername, 'interfaces':interfaces }
 
 def printRouterInfo(info):
