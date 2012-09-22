@@ -23,11 +23,12 @@ def getTopology():
 
 def getRouterInfo(router):
 	router.getInfo()
+	return router
 
 if __name__=='__main__':
 	routers = getTopology()
 	pool = Pool(processes = len(routers))
-	info = pool.map(getRouterInfo,routers)
+	routers = pool.map(getRouterInfo,routers)
 	for router in routers:
 		print router
 		print

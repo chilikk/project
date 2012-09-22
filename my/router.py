@@ -10,16 +10,17 @@ class Router(object):
 		self.host = ip
 
 	def __str__(self):
-		print "Router %s:" % self.name
-	        print "        IP addresses: "
+		result = "Router %s:\n" % self.name
+	        result += "        IP addresses:\n"
 	        for item in self.ips:
-	                print "                %s" % item
-	        print "        Interfaces: "
+	                result+="                %s\n" % item
+	        result+="        Interfaces:\n"
 	        for item in self.interfaces:
-	                print "                %s" % item
-	        print "        Link-layer neighbours: "
+	                result+="                %s\n" % item
+	        result+="        Link-layer neighbours:\n"
 	        for item in self.neighbours:
-	                print "                %s" % item
+	                result+="                %s\n" % item
+		return result
 	
 class RouterSnmp(Router):
 	snmpiface = None	
