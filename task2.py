@@ -2,9 +2,13 @@
 
 from task1mp import routers
 from multiprocessing import Pool
+if __debug__:
+	import sys
+	from task1mp import starttime
 
 def poll(router):
-	router.pollLinksLoad()
+	time, load = router.pollLinksLoad()
+	sys.stderr.write("Polled %s (links load %s): %f\n" % (router.host,load,time-starttime))
 	return router
 
 if __name__=='__main__':

@@ -1,6 +1,4 @@
 from time import time
-if __debug__:
-	import sys
 
 class Router(object):
 	host = None
@@ -51,10 +49,7 @@ class RouterSnmp(Router):
 	def pollLinksLoad(self):
 		if not self.num_ifs:
 			self.getNumIfs()
-			sys.stderr.write("Obtained %s number of interfaces %d: %f" % (self.host,self.num_ifs,time()-starttime))
 	        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
 		currTime = time()
 	        self.linksLoad[currTime]=currLinksLoad
-		if __debug__:
-			sys.stderr.write("Polling %s (%s): %f\n" % (self.host,currLinksLoad,currTime-starttime))
-
+		return (currTime, currLinksLoad)
