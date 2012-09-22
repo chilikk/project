@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from my.snmpiface import SnmpIface
-from multiprocessing import Process, Queue
+from multiprocessing import Pool
 
 def list_union(a,b):
 	for item in b:
