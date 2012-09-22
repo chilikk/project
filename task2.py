@@ -17,11 +17,8 @@ class Polling(object):
 		self.prevtime, self.prevload = (None, None)
 		self.notfirst = False
 	
-	def poll(self,router):
-		return router.pollLinksLoad()
-
 	def polling(self):
-		pollresult = self.pool.map(self.poll, self.routers)
+		pollresult = self.pool.map(lambda router: router.pollLinksLoad(), self.routers)
 		avgtime, totload = self.calc_totload(pollresult)
 		if self.notfirst:
 			difftime, bandwidth = calc_bandwidth(avgtime, totload)
