@@ -14,7 +14,7 @@ def list_union(a,b):
 
 def getTopologyInfo(host):
 	if __debug__:
-		sys.stderr.write('Getting topology info for %s: %f',(host,time()-starttime))
+		sys.stderr.write('Getting topology info for %s: %f' % (host,time()-starttime))
 	router = SnmpIface(host = host)
 	neighbours = router.getSubtree(router.oid_ipRouteNextHop).values()
 	ips = router.getSubtree(router.oid_ipAdEntAddr).values()
@@ -24,7 +24,7 @@ def getTopologyInfo(host):
 
 def getRouterInfo(host):
 	if __debug__:
-		sys.stderr.write('Getting info for %s: %f',(host,time()-starttime))
+		sys.stderr.write('Getting info for %s: %f' % (host,time()-starttime))
 	router = SnmpIface(host = host)
 	routername = router.getObject(router.oid_sysName)
 	num_ifs = int(router.getObject(router.oid_ifNumber))
