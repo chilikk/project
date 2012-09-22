@@ -2,6 +2,9 @@
 
 from my.snmpiface import SnmpIface
 from multiprocessing import Pool
+if __debug__:
+	import sys
+	from time import time
 
 def list_union(a,b):
 	for item in b:
@@ -10,6 +13,8 @@ def list_union(a,b):
 	return a
 
 def getTopologyInfo(host):
+	if __debug__:
+		sys.stderr.write('Getting topology info for %s: %f',(host,time()-starttime))
 	router = SnmpIface(host = host)
 	neighbours = router.getSubtree(router.oid_ipRouteNextHop).values()
 	ips = router.getSubtree(router.oid_ipAdEntAddr).values()
@@ -18,6 +23,8 @@ def getTopologyInfo(host):
 
 
 def getRouterInfo(host):
+	if __debug__:
+		sys.stderr.write('Getting info for %s: %f',(host,time()-starttime))
 	router = SnmpIface(host = host)
 	routername = router.getObject(router.oid_sysName)
 	num_ifs = int(router.getObject(router.oid_ifNumber))
@@ -52,19 +59,18 @@ def getRouterTopologyInfo():
 
 if __name__=='__main__':
 	if __debug__: 
-		from time import time
 		starttime = time()
-		print "Program started: %f" % 0
+		sys.stderr.write("Program started: %f" % 0)
 	routerinfo = getRouterTopologyInfo()
 	if __debug__:
-		print "Topology discovered: %f" % (time()-starttime)
+		sys.stderr.write("Topology discovered: %f" % (time()-starttime))
 	routers = routerinfo.keys()
 	pool = Pool(processes = len(routers))
 	if __debug__:
-		print "Pool started: %f" % (time()-starttime)
+		sys.stderr.write("Pool started: %f" % (time()-starttime))
 	info = pool.map(getRouterInfo,routers)
 	if __debug__:
-		print "Pool finished: %f" % (time()-starttime)
+		sys.stderr.write("Pool finished: %f" % (time()-starttime))
 	info = zip(routers,info)
 	for router, data in info:
 		for key in data.keys():
