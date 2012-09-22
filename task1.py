@@ -1,6 +1,6 @@
 #!/usr/bin/python -O
 
-from my.router import RouterSnmp
+from my.router import Router
 from multiprocessing import Pool
 
 if __debug__:
@@ -18,7 +18,7 @@ def getTopology():
 	for host in tovisit:
 		if host in visited:
 			continue
-		router = RouterSnmp(host)
+		router = Router(host)
 		router.getTopologyInfo()
 		tovisit = list_union(tovisit,router.neighbours)
 		visited += router.ips
@@ -31,17 +31,22 @@ def getRouterInfo(router):
 	print router
 	return router
 
-if __debug__:
-	starttime = time()
-	sys.stderr.write("%f :: Started\n" % 0)
+def debugmsg(msg):
+	if __debug__:
+		if starttime:
+			global starttime = time()
+			now = 0
+		else:
+			now = time()-startime
+		sys.stderr.write("%f :: %s\n" % (now, msg))
+
+debugmsg('Started')
 routers = getTopology()
-if __debug__:
-	sys.stderr.write("%f :: Topology identified\n" % (time()-starttime))
+debugmsg('Topology identified')
 if __name__=='__main__':
 	pool = Pool(processes = len(routers))
 	routers = pool.map(getRouterInfo,routers)
-	if __debug__:
-		sys.stderr.write("%f :: Routers info collected\n" % (time()-starttime))
+	debugmsg('Routers info collected')
 	for router in routers:
 		print router
 		print

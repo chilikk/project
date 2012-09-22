@@ -8,6 +8,8 @@ class Router(object):
 		self.neighbours = None
 		self.num_ifs = None
 		self.interfaces = None
+		from snmpiface import SnmpIface
+		self.snmpiface = SnmpIface(host=ip)
 
 	def __str__(self):
 		result = "Router %s:\n" % (self.name or 'N/A')
@@ -30,12 +32,6 @@ class Router(object):
 		except Exception:
 			pass
 		return result
-
-class RouterSnmp(Router):
-	def __init__(self, ip):
-		super(RouterSnmp,self).__init__(ip)
-		from snmpiface import SnmpIface
-		self.snmpiface = SnmpIface(host=ip)
 
 	def getTopologyInfo(self):
 		self.neighbours = self.snmpiface.getSubtree(self.snmpiface.oid_ipRouteNextHop).values()
