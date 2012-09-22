@@ -10,17 +10,17 @@ def poll(router):
 	return router.pollLinksLoad()
 
 class Polling(object):
-	def __init__(routers):
+	def __init__(self,routers):
 		self.routers = routers
 		self.pool = Pool(processes = len(routers))
 		self.net_states = []
 		self.prevtime, self.prevload = (None, None)
 		self.notfirst = False
 	
-	def poll(router):
+	def poll(self,router):
 		return router.pollLinksLoad()
 
-	def polling():
+	def polling(self):
 		pollresult = self.pool.map(self.poll, self.routers)
 		avgtime, totload = self.calc_totload(pollresult)
 		if self.notfirst:
@@ -32,7 +32,7 @@ class Polling(object):
 		return (difftime, bandwidth)
 		
 
-	def calc_totload(pollresult):
+	def calc_totload(self,pollresult):
 		avgtime, totload = (.0,0)
                 for polltime, loads in pollresult:
                         avgtime+=polltime
@@ -41,7 +41,7 @@ class Polling(object):
                 avgtime/=len(pollresult)
 		return (avgtime, totload)
 
-	def calc_bandwidth(avgtime, totload):
+	def calc_bandwidth(self, avgtime, totload):
 		difftime = avgtime-self.prevtime
                 bandwidth = int((totload-self.prevload)/difftime)
                 return (difftime,bandwidth)
