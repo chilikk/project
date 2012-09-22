@@ -13,13 +13,13 @@ class Topology(object):
 				continue
 			index = len(self.routers)
 			self.routers.append(Router(host))
+			for router1 in self.routers:
+				print router1.snmpiface.transport
 			self.routers[index].getTopologyInfo()
 			for item in self.routers[index].neighbours:
 				if not item in self.tovisit and not item in self.visited:
 					self.tovisit.append(item)
 			self.visited += self.routers[index].ips
 			#self.routers.append(router)
-			for router1 in self.routers:
-				print router1.snmpiface.transport
 		del(self.tovisit)
 		del(self.visited)
