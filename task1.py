@@ -41,6 +41,7 @@ def debugmsg(msg):
 			now = time()-startime
 		sys.stderr.write("%f :: %s\n" % (now, msg))
 
+starttime = None
 debugmsg('Started')
 routers = getTopology()
 debugmsg('Topology identified')
