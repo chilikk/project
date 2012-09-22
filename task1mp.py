@@ -52,10 +52,13 @@ def getRouterTopologyInfo():
 
 if __name__=='__main__':
 	routerinfo = getRouterTopologyInfo()
-	for router in routerinfo.keys():
-		info = getRouterInfo(router)
-		for key in info.keys():
-			routerinfo[router][key]=info[key]
+	routers = routerinfo.keys()
+	pool = Pool(processes = len(routers))
+	info = pool.map(getRouterInfo,routers)
+	info = zip(routers,info)
+	for router, data in info:
+		for key in data.keys():
+			routerinfo[router][key]=data[key]
 		printRouterInfo(routerinfo[router])
 
 
