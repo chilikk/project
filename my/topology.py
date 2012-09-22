@@ -12,7 +12,7 @@ class Topology(object):
 			if host in self.visited:
 				continue
 			index = len(self.routers)
-			self.routers[index] = Router(host)
+			self.routers.append(Router(host))
 			self.routers[index].getTopologyInfo()
 			for item in self.routers[index].neighbours:
 				if not item in self.tovisit and not item in self.visited:
