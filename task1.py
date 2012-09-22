@@ -26,7 +26,9 @@ def getTopology():
 	return routers
 
 def getRouterInfo(router):
+	print router
 	router.getInfo()
+	print router
 	return router
 
 if __debug__:
