@@ -79,12 +79,13 @@ class SnmpIface(object):
 		
 		return response
 
-	def parseResponse(response,oid=False):
+	def parseResponse(self, response,oid=False):
+		print response
 		result={}
 		for row in response:
-			for name in row:
+			for name,value in row:
 				if not oid or oid == name.prettyPrint()[:len(oid)]:
-					result[name.prettyPrint()]=response[name].prettyPrint()
+					result[name.prettyPrint()]=value.prettyPrint()
 		return result
 
 	def getSubtree(self,oid):
@@ -92,14 +93,14 @@ class SnmpIface(object):
 			response = self._getObj(oid,'getnext')
 		except Exception:
 			raise
-		return parseResponse(response)
+		return self.parseResponse(response)
 
 	def getObject(self,oid):
 		try:
 			response = self._getObj(oid,'get')
 		except Exception:
 			raise
-		result = parseResponse(response,oid)
+		result = self.parseResponse(response,oid)
 		if result:
 			return result.values()[0]
 		raise Exception('Object with given OID does not exist or something went wrong!')
@@ -109,7 +110,7 @@ class SnmpIface(object):
 			response = self._getObj(oid,'getbulk', bulkSize = bulkSize+1)
 		except Exception:
 			raise
-		return parseResponse(response,oid)
+		return self.parseResponse(response,oid)
 
 
 class SnmpException(Exception):
