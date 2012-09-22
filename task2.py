@@ -21,12 +21,13 @@ class Polling(object):
 		pollresult = self.pool.map(poll, self.routers)
 		avgtime, totload = self.calc_totload(pollresult)
 		if self.notfirst:
-			difftime, bandwidth = self.calc_bandwidth(avgtime, totload)
+			network_state = self.calc_bandwidth(avgtime, totload)
+			self.net_states.append(network_state)
 		else:
 			self.notfirst = True
-			difftime, bandwidth = (None, None)
+			network_state = None
 		self.prevtime, self.prevload = (avgtime, totload)
-		return (difftime, bandwidth)
+		return network_state
 		
 
 	def calc_totload(self,pollresult):
@@ -43,39 +44,12 @@ class Polling(object):
                 bandwidth = int((totload-self.prevload)/difftime)
                 return (difftime,bandwidth)
 
-if __name__=='ololo':
-	pool = Pool(processes = len(routers))
-	net_states = []
-	prevtime, prevload = (None, None)
-	for i in range(20):
-		nexttime = time.time()+20
-		pollresult = pool.map(poll,routers)
-		avgtime, totload = (.0,0)
-		for polltime, loads in pollresult:
-			avgtime+=polltime
-			for load in loads:
-				totload+=int(load)
-		avgtime/=len(pollresult)
-		if prevtime and prevload:
-			difftime = avgtime-prevtime
-			bandwidth = int((totload-prevload)/difftime)
-			net_states.append((difftime,bandwidth))
-			print "+%f\t\t%d" % (difftime, bandwidth)
-		else:
-			sys.stderr.write("start\ntime difference\t\ttotal network bandwidth\n")
-		prevtime, prevload = (avgtime, totload)
-		try:
-			time.sleep(nexttime-time.time())
-		except Exception:
-			sys.exc_clear()
-	print net_states
-
 if __name__=='__main__':
 	polling = Polling(routers)
 	for i in range(5):
-		nexttime = time.time()+20
+		nexttime = time.time()+10
 		network_state = polling.polling()
-		if network_state[0]:
+		if network_state:
 			print "+%f\t\t%d" % network_state
 		else:
 			sys.stderr.write("start polling\ntime difference\t\ttotal network bandwidth\n")
