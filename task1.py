@@ -11,10 +11,11 @@ def getRouterInfo(router):
 topology = Topology('192.168.1.10')
 debugmsg('Started')
 topology.get()
+routers = topology.routers
 debugmsg('Topology identified')
 if __name__=='__main__':
-	pool = Pool(processes = len(topology.routers))
-	routers = pool.map(getRouterInfo,topology.routers)
+	pool = Pool(processes = len(routers))
+	routers = pool.map(getRouterInfo,routers)
 	debugmsg('Routers info collected')
 	for router in routers:
 		print router
