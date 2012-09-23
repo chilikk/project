@@ -8,7 +8,7 @@ from my.debug import debugmsg, printmsg, printerrmsg
 def poll(routerid):
 	return routers[routerid].pollLinksLoad()
 
-pollinterval = 0
+pollinterval = 5
 num_samples = 200
 
 if __name__=='__main__':
