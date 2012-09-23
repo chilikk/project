@@ -6,7 +6,7 @@ class NetStatistics(object):
 		self.stdev = None
 		self.threshold = None
 		self.alarm = ""
-		self.states_to_store = 40
+		self.states_to_store = 50
 		if 'methods' in kwargs:
 			self.methods = kwargs['methods']
 		else:

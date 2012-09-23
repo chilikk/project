@@ -9,7 +9,7 @@ def poll(routerid):
 	return routers[routerid].pollLinksLoad()
 
 pollinterval = 0
-num_samples = 100
+num_samples = 200
 
 if __name__=='__main__':
 	try:
