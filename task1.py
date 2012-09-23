@@ -5,6 +5,6 @@ if __name__=='__main__':
 	try:
 		routers = pickle.load(open('routers.dat','r'))
 	except Exception:
-		import main
+		from main import routers
 	for router in routers:
 		print router

@@ -16,7 +16,7 @@ if __name__=='__main__':
 		routers = pickle.load(open('routers.dat','r'))
 		routers = [router.restoresnmpiface() for router in routers]
 	except Exception:
-		import main
+		from main import routers
 	stats = NetStatistics()
 	nrouters = len(routers)
 	pool = Pool(processes = nrouters)
