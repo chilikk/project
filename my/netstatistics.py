@@ -50,6 +50,8 @@ class NetStatistics(object):
 		self.alarmprobability = 0.
 		if ('stdev' in self.methods):
 			self.alarmprobability += self.stdev_method()
+		if ('median' in self.methods):
+			self.alarmprobability += self.median_rule()
 		self.alarmprobability *= self.methodprobability
 		self.alarmprobability = int(self.alarmprobability)
 		self.alarm = ("ALARM" if self.alarmprobability > 50 else "")
