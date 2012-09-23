@@ -3,7 +3,7 @@
 from my.netstatistics import NetStatistics
 from multiprocessing import Pool
 import time, sys, pickle
-from my.debug import debugmsg,printmsg
+from my.debug import debugmsg, printmsg, printerrmsg
 
 def poll(routerid):
 	return routers[routerid].pollLinksLoad()
