@@ -1,4 +1,4 @@
-from my.router import Router
+from my.router import RouterSnmp
 
 class Topology(object):
 	def __init__(self,starting_router):
@@ -11,7 +11,7 @@ class Topology(object):
 			if host in self.visited:
 				continue
 			index = len(self.routers)
-			router = Router(host)
+			router = RouterSnmp(host)
 			router.getTopologyInfo()
 			for item in router.neighbours:
 				if not item in self.tovisit and not item in self.visited:
