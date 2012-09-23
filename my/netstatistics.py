@@ -5,7 +5,7 @@ class NetStatistics(object):
 		self.netstate = None
 		self.stdev = None
 		self.alarm = ""
-		self.states_to_store = 5
+		self.states_to_store = 10
 		if 'methods' in kwargs:
 			self.methods = kwargs['methods']
 		else:
@@ -15,10 +15,10 @@ class NetStatistics(object):
 		avgtime, totload = self.calc_totload(pollresult)
 		if self.netstate:
 			self.netstate = self.calc_bandwidth(avgtime, totload)
-			self.net_states.append(self.netstate)
-			if len(self.net_states)>self.states_to_store:
+			if len(self.net_states)==self.states_to_store:
 				self.detectOutlier()
 				del self.net_states[0]
+			self.net_states.append(self.netstate)
 		else:
 			self.netstate = "start"
 		self.prevtime, self.prevload = (avgtime, totload)
