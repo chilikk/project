@@ -16,5 +16,4 @@ def debugmsg(msg):
 		printerrmsg(msg)
 
 def printmsg(msg):
-	sys.stderr.write("%f :: " % gettime())
-	print msg
+	print "%f\t\t%s" % (gettime(),msg)
