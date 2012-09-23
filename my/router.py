@@ -50,7 +50,7 @@ class RouterSnmp(Router):
 	
 	def restoresnmpiface(self):
 		from snmpiface import SnmpIface
-		self.snmpiface = SnmpIface(host=ip)
+		self.snmpiface = SnmpIface(host=self.host)
 		return self
 
 	def getTopologyInfo(self):
