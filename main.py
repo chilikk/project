@@ -17,7 +17,7 @@ def getTopology(initial_router):
 	debugmsg('Topology identified')
 	return topology.routers
 
-def saveRoutersData():
+def saveRoutersData(routers):
 	return pickle.dump([router.cleartopickle() for router in routers],open('routers.dat','w'))
 
 routers = getTopology('192.168.1.10')
