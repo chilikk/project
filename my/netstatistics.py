@@ -38,7 +38,7 @@ class NetStatistics(object):
 	def calc_bandwidth(self, avgtime, totload):
                 return int((totload-self.prevload)/(avgtime-self.prevtime))
 
-	def detectOutlier(methods):
+	def detectOutlier(self,methods):
 		from numpy import std
 		self.stdev = std(self.net_states)
 		self.alarm = "ALARM" if self.netstate >= 3*self.stdev else ""
