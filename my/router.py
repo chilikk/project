@@ -47,6 +47,7 @@ class RouterSnmp(Router):
 
 	def cleartopickle(self):
 		del self.snmpiface
+		return self
 
 	def getTopologyInfo(self):
 		self.neighbours = self.snmpiface.getSubtree(self.snmpiface.oid_ipRouteNextHop).values()
