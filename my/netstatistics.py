@@ -42,5 +42,5 @@ class NetStatistics(object):
 		from numpy import std, mean
 		self.stdev = std(self.net_states)
 		self.mean = mean(self.net_states)
-		self.alarm = "ALARM" if self.netstate >= mean+3*self.stdev else ""
+		self.alarm = "ALARM" if self.netstate >= self.mean+3*self.stdev else ""
 		return (self.stdev, self.alarm)

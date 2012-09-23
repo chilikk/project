@@ -9,7 +9,7 @@ def poll(routerid):
 	return routers[routerid].pollLinksLoad()
 
 pollinterval = 0
-num_samples = 20
+num_samples = 30
 
 if __name__=='__main__':
 	try:
@@ -30,11 +30,11 @@ if __name__=='__main__':
 		netstate, stdev, alarm = stats.getNetState()
 		if netstate != "start":
 			if stdev:
-				printmsg("\t%d\t\t%d\t%s" % (netstate, stdev, alarm))
+				printmsg("\t%d\t\t\t%d\t%s" % (netstate, stdev, alarm))
 			else:
 				printmsg("\t%d" % netstate)
 		else:
-			printerrmsg("start polling\ntime\t\ttotal network load\tstandard deviation")
+			printerrmsg("start polling\ntime\t\tnetwork load\tstandard deviation")
 		try:
 			time.sleep(nexttime-time.time())
 		except Exception:
