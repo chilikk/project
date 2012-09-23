@@ -16,7 +16,7 @@ class SnmpIface(object):
 	oid_ifNumber = "1.3.6.1.2.1.2.1.0"
 	oid_ifDescr = "1.3.6.1.2.1.2.2.1.2"
 	oid_ipAdEntAddr = "1.3.6.1.2.1.4.20.1.1"
-	oid_ifInOctets = "1.3.6.1.2.1.2.2.1.10"
+	oid_ifInOctets = "1.3.6.1.2.1.2.2.1.10" #ifInUcastPackets, ifInNUcastPackets, ifInDiscards, ifInErrors follow, can be read by getbulk
 
 	authProtocolsList = { 	'MD5' : cmdgen.usmHMACMD5AuthProtocol,
 				'SHA' : cmdgen.usmHMACSHAAuthProtocol,
@@ -101,12 +101,15 @@ class SnmpIface(object):
 			return result.values()[0]
 		raise Exception('Object with given OID does not exist or something went wrong!')
 
-	def getBulk(self, oid, bulkSize):
+	def getBulk(self, oid, bulkSize, **kwargs):
 		try:
 			response = self._getObj(oid,'getbulk', bulkSize = bulkSize+1)
 		except Exception:
 			raise
-		return self.parseResponse(response,oid)
+		if 'dontmatch' in kwargs and kwargs['dontmatch']==1:
+			return self.parseResponse(response)
+		else
+			return self.parseResponse(response,oid)
 
 
 class SnmpException(Exception):
