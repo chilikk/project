@@ -42,4 +42,4 @@ class NetStatistics(object):
 		from numpy import std
 		self.stdev = std(self.net_states)
 		self.alarm = "ALARM" if self.netstate >= 3*self.stdev else ""
-		return (stdev, alarm)
+		return (self.stdev, self.alarm)
