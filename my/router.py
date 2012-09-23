@@ -72,8 +72,14 @@ class RouterSnmp(Router):
 		return (currTime, currLinksLoad)
 
 	def pollLinksOctetsPackets(self):
-		currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,5*self.num_ifs).values()
-		octets = sum([int(item) for item in currLinksLoad[:self.num_ifs]])
-		packets = sum([int(item) for item in currLinksLoad[self.num_ifs:5*self.num_ifs]])
-		currTime = time()
-		return (currTime, octets, packets)
+                oid = self.snmpiface.oid_ifInOctets
+		bulksize = 5*self.num_ifs
+		currLinksLoad=self.snmpiface.getBulk(oid,bulksize,dontmatch=1)
+                octets, packets = (0,0)
+                for key in currLinksLoad:
+                        if key[:len(oid)]==oid:
+                                octets+=int(currLinksLoad[key])
+                        elif key[:len(oid)] in [oid[:len(oid)-1]+s for s in ('1','2','3','4')]:
+                                packets+=int(currLinksLoad[key])
+                currTime = time()
+                return (currTime, octets, packets)
