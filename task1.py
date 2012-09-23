@@ -2,7 +2,7 @@
 
 from my.topology import Topology
 from my.debug import debugmsg
-from multiprocessing import Pool#Process
+from multiprocessing import Pool
 
 def getRouterInfo(routerid):
 	router = routers[routerid]
@@ -26,5 +26,5 @@ if __name__=='__main__':
 	debugmsg('Routers info collected')
 	for router in routers:
 		print router
-		print
+		print router.snmpiface.transport
 
