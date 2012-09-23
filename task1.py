@@ -24,7 +24,7 @@ if __name__=='__main__':
 	for i in range(nrouters):
 		routers[i].merge(routersinfo[i])
 	debugmsg('Routers info collected')
-	print routers.sort(key=lambda router: router.name)
+	routers.sort(key=lambda router: int(router.name[1:]))
 	for router in routers:
 		print router
 		print
