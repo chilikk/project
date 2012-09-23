@@ -4,6 +4,7 @@ from my.topology import Topology
 from my.debug import debugmsg
 from multiprocessing import Pool
 import pickle
+from defaults import initialRouter
 
 def getRouterInfo(routerid):
 	router = routers[routerid]
@@ -18,9 +19,10 @@ def getTopology(initial_router):
 	return topology.routers
 
 def saveRoutersData(routers):
-	return pickle.dump([router.cleartopickle() for router in routers],open('routers.dat','w'))
+	from defaults import fileRoutersData
+	return pickle.dump([router.cleartopickle() for router in routers],open(fileRoutersData,'w'))
 
-routers = getTopology('192.168.1.10')
+routers = getTopology(initialRouter)
 nrouters = len(routers)
 pool = Pool(processes = nrouters)
 routersinfo = pool.map(getRouterInfo,range(nrouters))

@@ -1,3 +1,5 @@
+from defaults import storeNetStates
+
 class NetStatistics(object):
 	def __init__(self, **kwargs):
 		self.net_states = []
@@ -6,7 +8,7 @@ class NetStatistics(object):
 		self.stdev = None
 		self.threshold = None
 		self.alarm = ""
-		self.states_to_store = 30
+		self.states_to_store = storeNetStates
 		if 'methods' in kwargs:
 			self.methods = kwargs['methods']
 		else:

@@ -4,16 +4,16 @@ from my.netstatistics import NetStatistics
 from multiprocessing import Pool
 import time, sys, pickle
 from my.debug import debugmsg, printmsg, printerrmsg
+from defaults import fileRoutersData, pollinterval, num_samples
 
 def poll(routerid):
 	return routers[routerid].pollLinksLoad()
 
-pollinterval = 5
-num_samples = 200
-
 if __name__=='__main__':
 	try:
-		routers = pickle.load(open('routers.dat','r'))
+		f = open(fileRoutersData, 'r')
+		routers = pickle.load(f)
+		f.close()
 		routers = [router.restoresnmpiface() for router in routers]
 	except Exception:
 		from my.debug import printerrmsg
