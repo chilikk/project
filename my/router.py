@@ -73,7 +73,7 @@ class RouterSnmp(Router):
 
 	def pollLinksOctetsPackets(self):
 		currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,5*self.num_ifs).values()
-		octets = sum(currLinksLoad[0:self.num_ifs])
-		packets = sum(currLinksLoad[self.num_ifs:5*self.num_ifs])
+		octets = sum([int(item) for item in currLinksLoad[:self.num_ifs]])
+		packets = sum([int(item) for item in currLinksLoad[self.num_ifs:5*self.num_ifs]])
 		currTime = time()
 		return (currTime, octets, packets)
