@@ -1,9 +1,15 @@
 class NetStatistics(object):
-	def __init__(self):
+	def __init__(self, **kwargs):
 		self.net_states = []
 		self.prevtime, self.prevload = (None, None)
 		self.netstate = None
+		self.stdev = None
+		self.alarm = ""
 		self.states_to_store = 40
+		if 'methods' in kwargs:
+			self.methods = kwargs['methods']
+		else:
+			self.methods = ('stdev',)
 		
 	def addSample(self,pollresult):
 		avgtime, totload = self.calc_totload(pollresult)
@@ -11,13 +17,14 @@ class NetStatistics(object):
 			self.netstate = self.calc_bandwidth(avgtime, totload)
 			self.net_states.append(self.netstate)
 			if len(self.net_states)>self.states_to_store:
+				self.detectOutlier()
 				del self.net_states[0]
 		else:
 			self.netstate = "start"
 		self.prevtime, self.prevload = (avgtime, totload)
 	
 	def getNetState(self):
-		return self.netstate
+		return (self.netstate, self.stdev, self.alarm)
 
 	def calc_totload(self,pollresult):
 		avgtime, totload = (.0,0)
@@ -30,3 +37,9 @@ class NetStatistics(object):
 
 	def calc_bandwidth(self, avgtime, totload):
                 return int((totload-self.prevload)/(avgtime-self.prevtime))
+
+	def detectOutlier():
+		from numpy import std
+		self.stdev = std(self.net_states)
+		self.alarm = "ALARM" if self.netstate >= 3*self.stdev else ""
+		return (stdev, alarm)

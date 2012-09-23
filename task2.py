@@ -27,11 +27,14 @@ if __name__=='__main__':
 		nexttime = time.time()+pollinterval
 		sample = pool.map(poll, range(nrouters))
 		stats.addSample(sample)
-		netstate = stats.getNetState()
+		netstate, stdev, alarm = stats.getNetState()
 		if netstate != "start":
-			printmsg("%d" % netstate)
+			if stdev:
+				printmsg("%d\t%d\t%s" % (netstate, stdev, alarm))
+			else:
+				printmsg("%d" % netstate)
 		else:
-			printerrmsg("start polling\ntime\t\ttotal network load")
+			printerrmsg("start polling\ntime\t\ttotal network load\tstandard deviation")
 		try:
 			time.sleep(nexttime-time.time())
 		except Exception:
