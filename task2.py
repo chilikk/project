@@ -8,6 +8,9 @@ from my.debug import debugmsg, printmsg, printerrmsg
 def poll(routerid):
 	return routers[routerid].pollLinksLoad()
 
+pollinterval = 10
+num_samples = 10
+
 if __name__=='__main__':
 	try:
 		routers = pickle.load(open('routers.dat','r'))
@@ -17,13 +20,13 @@ if __name__=='__main__':
 	stats = NetStatistics()
 	nrouters = len(routers)
 	pool = Pool(processes = nrouters)
-	for i in range(5):
-		nexttime = time.time()+10
+	for i in range(num_samples):
+		nexttime = time.time()+pollinterval
 		sample = pool.map(poll, range(nrouters))
 		stats.addSample(sample)
 		netstate = stats.getNetState()
 		if netstate != "start":
-			printmsg("%d" % network_state)
+			printmsg("%d" % netstate)
 		else:
 			printerrmsg("start polling\ntime\t\ttotal network load")
 		try:
