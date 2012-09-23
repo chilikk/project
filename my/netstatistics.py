@@ -39,7 +39,8 @@ class NetStatistics(object):
                 return int((totload-self.prevload)/(avgtime-self.prevtime))
 
 	def detectOutlier(self):
-		from numpy import std
+		from numpy import std, mean
 		self.stdev = std(self.net_states)
-		self.alarm = "ALARM" if self.netstate >= 3*self.stdev else ""
+		self.mean = mean(self.net_states)
+		self.alarm = "ALARM" if self.netstate >= mean+3*self.stdev else ""
 		return (self.stdev, self.alarm)
