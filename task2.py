@@ -29,7 +29,7 @@ if __name__=='__main__':
 		stats.addSample(sample)
 		netstate, threshold, alarm = stats.getNetState()
 		if netstate != "start":
-			if stdev:
+			if threshold:
 				printmsg("\t%d\t\t%d\t%s" % (netstate, threshold, alarm))
 			else:
 				printmsg("\t%d" % netstate)
