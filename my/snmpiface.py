@@ -108,7 +108,7 @@ class SnmpIface(object):
 			raise
 		if 'dontmatch' in kwargs and kwargs['dontmatch']==1:
 			return self.parseResponse(response)
-		else
+		else:
 			return self.parseResponse(response,oid)
 
 
