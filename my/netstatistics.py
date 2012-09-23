@@ -5,14 +5,16 @@ class NetStatistics(object):
 		self.net_states = []
 		self.prevtime, self.prevload = (None, None)
 		self.netstate = None
-		self.stdev = None
-		self.threshold = None
+		self.stdevthreshold = None
 		self.alarm = ""
+		self.alarmprobability = 0
+		self.attacktype = ""
 		self.states_to_store = storeNetStates
 		if 'methods' in kwargs:
 			self.methods = kwargs['methods']
 		else:
 			self.methods = ('stdev',)
+		self.methodprobability = 100./len(self.methods)
 		
 	def addSample(self,pollresult):
 		avgtime, totload = self.calc_totload(pollresult)
@@ -27,7 +29,10 @@ class NetStatistics(object):
 		self.prevtime, self.prevload = (avgtime, totload)
 	
 	def getNetState(self):
-		return (self.netstate, self.threshold, self.alarm)
+		return (self.netstate, self.stdevthreshold, self.alarm)
+
+	def getAlarmParams(self):
+		return (self.alarmprobability, self.attacktype)
 
 	def calc_totload(self,pollresult):
 		avgtime, totload = (.0,0)
@@ -42,7 +47,23 @@ class NetStatistics(object):
                 return int((totload-self.prevload)/(avgtime-self.prevtime))
 
 	def detectOutlier(self):
+		self.alarmprobability = 0.
+		if ('stdev' in self.methods):
+			self.alarmprobability += self.stdev_method()
+		self.alarmprobability *= self.methodprobability
+		self.alarmprobability = int(self.alarmprobability)
+		self.alarm = ("ALARM" if self.alarmprobability > 50 else "")
+		
+	def stdev_method(self):
 		from numpy import std, mean
-		self.stdev = std(self.net_states)
-		self.threshold = mean(self.net_states) + 3*self.stdev
-		self.alarm = "ALARM" if self.netstate >= self.threshold else ""
+		stdev = std(self.net_states)
+		self.stdevthreshold = mean(self.net_states) + 3*stdev
+		return (1 if self.netstate >= self.stdevthreshold else 0)
+
+	def median_rule(self):
+		values = sorted(self.net_states)
+		nval1 = len(values)+1
+		median = values[nval1/2-1]
+		iqr = values[nval1*3/4-1]-values[nval1/4-1]
+		self.medianthreshold = median + int(2.3*iqr)
+		return (1 if self.netstate >= self.medianthreshold else 0)
