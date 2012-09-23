@@ -5,7 +5,7 @@ class NetStatistics(object):
 		self.netstate = None
 		self.stdev = None
 		self.alarm = ""
-		self.states_to_store = 40
+		self.states_to_store = 5
 		if 'methods' in kwargs:
 			self.methods = kwargs['methods']
 		else:
@@ -38,7 +38,7 @@ class NetStatistics(object):
 	def calc_bandwidth(self, avgtime, totload):
                 return int((totload-self.prevload)/(avgtime-self.prevtime))
 
-	def detectOutlier():
+	def detectOutlier(methods):
 		from numpy import std
 		self.stdev = std(self.net_states)
 		self.alarm = "ALARM" if self.netstate >= 3*self.stdev else ""

@@ -30,9 +30,9 @@ if __name__=='__main__':
 		netstate, stdev, alarm = stats.getNetState()
 		if netstate != "start":
 			if stdev:
-				printmsg("%d\t%d\t%s" % (netstate, stdev, alarm))
+				printmsg("\t%d\t\t%d\t%s" % (netstate, stdev, alarm))
 			else:
-				printmsg("%d" % netstate)
+				printmsg("\t%d" % netstate)
 		else:
 			printerrmsg("start polling\ntime\t\ttotal network load\tstandard deviation")
 		try:
