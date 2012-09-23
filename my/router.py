@@ -4,10 +4,10 @@ class Router(object):
 	def __init__(self,ip):
 		self.host = ip
 		self.name = None
-		self.ips = None
-		self.neighbours = None
-		self.num_ifs = None
-		self.interfaces = None
+		self.ips = []
+		self.neighbours = []
+		self.num_ifs = 0
+		self.interfaces = []
 		from snmpiface import SnmpIface
 		self.snmpiface = SnmpIface(host=ip)
 
