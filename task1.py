@@ -5,6 +5,9 @@ if __name__=='__main__':
 	try:
 		routers = pickle.load(open('routers.dat','r'))
 	except Exception:
-		from main import routers
+		from my.debug import printerrmsg
+		import sys
+		printerrmsg('routers.dat not found! run main.py first')
+		sys.exit()
 	for router in routers:
 		print router
