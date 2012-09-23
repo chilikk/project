@@ -1,31 +1,20 @@
-#!/usr/bin/python -O
-
-from multiprocessing import Pool
-import time
-
-def poll(router):
-	return router.pollLinksLoad()
-
-class Polling(object):
+class NetStatistics(object):
 	def __init__(self,routers):
-		self.routers = routers
-		self.pool = Pool(processes = len(routers))
 		self.net_states = []
 		self.prevtime, self.prevload = (None, None)
-		self.notfirst = False
+		self.netstate = None
 		
-	def polling(self):
-		pollresult = self.pool.map(poll, self.routers)
+	def addSample(self,pollresult):
 		avgtime, totload = self.calc_totload(pollresult)
-		if self.notfirst:
-			network_state = self.calc_bandwidth(avgtime, totload)
-			self.net_states.append(network_state[1])
+		if self.netstate:
+			self.netstate = self.calc_bandwidth(avgtime, totload)
+			self.net_states.append(self.netstate)
 		else:
-			self.notfirst = True
-			network_state = None
+			self.netstate = "start"
 		self.prevtime, self.prevload = (avgtime, totload)
-		return network_state
-		
+	
+	def getNetState(self):
+		return self.netstate
 
 	def calc_totload(self,pollresult):
 		avgtime, totload = (.0,0)
@@ -37,6 +26,4 @@ class Polling(object):
 		return (avgtime, totload)
 
 	def calc_bandwidth(self, avgtime, totload):
-		difftime = avgtime-self.prevtime
-                bandwidth = int((totload-self.prevload)/difftime)
-                return (difftime,bandwidth)
+                return int((totload-self.prevload)/(avgtime-self.prevtime))

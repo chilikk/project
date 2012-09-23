@@ -1,13 +1,20 @@
-if __debug__:
-	import sys,time
-	starttime = None
+import sys,time
+starttime = None
+
+def gettime():
+	global starttime
+        if not starttime:
+                starttime = time.time()
+        	now = 0
+	return time.time()-starttime
+	
+def printerrmsg(msg):
+	sys.stderr.write("%f :: %s\n" % (gettime(), msg))
 
 def debugmsg(msg):
 	if __debug__:
-                global starttime
-                if not starttime:
-                        starttime = time.time()
-                        now = 0
-                else:
-                        now = time.time()-starttime
-                sys.stderr.write("%f :: %s\n" % (now, msg))
+		printerrmsg(msg)
+
+def printmsg(msg):
+	sys.stderr.write("%f :: " % gettime())
+	print msg

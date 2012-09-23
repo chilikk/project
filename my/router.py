@@ -34,8 +34,7 @@ class Router(object):
 class RouterSnmp(Router):
 	def __init__(self,ip):
 		super(RouterSnmp,self).__init__(ip)
-		from snmpiface import SnmpIface
-		self.snmpiface = SnmpIface(host=ip)
+		self.restoresnmpiface()
 
 	def merge(self,router):
 		if self.host == router.host:
@@ -47,6 +46,11 @@ class RouterSnmp(Router):
 
 	def cleartopickle(self):
 		del self.snmpiface
+		return self
+	
+	def restoresnmpiface(self):
+		from snmpiface import SnmpIface
+		self.snmpiface = SnmpIface(host=ip)
 		return self
 
 	def getTopologyInfo(self):
