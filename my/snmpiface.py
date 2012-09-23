@@ -47,7 +47,7 @@ class SnmpIface(object):
 			authParameters['privKey'] = privKey
 		self.authentication = cmdgen.UsmUserData(securityName, **authParameters)
 
-		transportParameters = (host,port)
+		transportParameters = (self.host,port)
 		self.transport = cmdgen.UdpTransportTarget(transportParameters)
 	
 	def test(self):
