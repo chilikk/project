@@ -1,5 +1,5 @@
 class NetStatistics(object):
-	def __init__(self,routers):
+	def __init__(self):
 		self.net_states = []
 		self.prevtime, self.prevload = (None, None)
 		self.netstate = None
