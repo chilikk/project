@@ -34,7 +34,7 @@ if __name__=='__main__':
 			else:
 				printmsg("\t%d" % netstate)
 		else:
-			printerrmsg("start polling\ntime\t\tnetwork load\tstandard deviation")
+			printerrmsg("start polling\ntime\t\tnetwork load\talarm threshold")
 		try:
 			time.sleep(nexttime-time.time())
 		except Exception:

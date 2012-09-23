@@ -4,6 +4,7 @@ class NetStatistics(object):
 		self.prevtime, self.prevload = (None, None)
 		self.netstate = None
 		self.stdev = None
+		self.threshold = None
 		self.alarm = ""
 		self.states_to_store = 10
 		if 'methods' in kwargs:
@@ -24,7 +25,7 @@ class NetStatistics(object):
 		self.prevtime, self.prevload = (avgtime, totload)
 	
 	def getNetState(self):
-		return (self.netstate, self.stdev, self.alarm)
+		return (self.netstate, self.threshold, self.alarm)
 
 	def calc_totload(self,pollresult):
 		avgtime, totload = (.0,0)
@@ -41,6 +42,5 @@ class NetStatistics(object):
 	def detectOutlier(self):
 		from numpy import std, mean
 		self.stdev = std(self.net_states)
-		self.mean = mean(self.net_states)
-		self.alarm = "ALARM" if self.netstate >= self.mean+3*self.stdev else ""
-		return (self.stdev, self.alarm)
+		self.threshold = mean(self.net_states) + 3*self.stdev
+		self.alarm = "ALARM" if self.netstate >= self.threshold else ""
