@@ -31,6 +31,9 @@ class NetStatistics(object):
 	def getNetState(self):
 		return (self.netstate, self.stdevthreshold, self.alarm)
 
+	def getThresholds(self):
+		return (self.medianthreshold, 0)
+
 	def getAlarmParams(self):
 		return (self.alarmprobability, self.attacktype)
 
@@ -52,6 +55,8 @@ class NetStatistics(object):
 			self.alarmprobability += self.stdev_method()
 		if ('median' in self.methods):
 			self.alarmprobability += self.median_rule()
+		if ('dumb' in self.methods):
+			self.alarmprobability += self.dumb_method()
 		self.alarmprobability *= self.methodprobability
 		self.alarmprobability = int(self.alarmprobability)
 		self.alarm = ("ALARM" if self.alarmprobability > 50 else "")
@@ -69,3 +74,6 @@ class NetStatistics(object):
 		iqr = values[nval1*3/4-1]-values[nval1/4-1]
 		self.medianthreshold = median + int(2.3*iqr)
 		return (1 if self.netstate >= self.medianthreshold else 0)
+
+	def dumb_method(self):
+		return 1
