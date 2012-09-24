@@ -18,7 +18,7 @@ def getTopology(initial_router):
 	debugmsg('Topology identified')
 	return topology.routers
 
-def loadRouters()
+def loadRouters():
 	try:
                 f = open(fileRoutersData, 'r')
                 routers = pickle.load(f)
