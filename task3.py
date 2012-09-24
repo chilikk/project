@@ -23,14 +23,14 @@ if __name__=='__main__':
 		medianthreshold, dumbthreshold = stats.getThresholds()
 		if netstate != "start":
 			if stdevthreshold:
-				msg = "\t%d\t%d\t%d\t%d\t%s" % (netstate, stdevthreshold, medianthreshold, dumbthreshold, alarm)
+				msg = "%d\t(%d\t%d\t%d)\t%s" % (netstate, stdevthreshold, medianthreshold, dumbthreshold, alarm)
 				if alarm=='ALARM':
 					msg+="\t%d\t%s" % stats.getAlarmParams()
 			else:
 				msg = "\t%d" % netstate
 			printmsg(msg)
 		else:
-			printerrmsg("start polling\ntime\t\tnetwork load\talarm threshold")
+			printerrmsg("start polling\ntime\t\tnetwork load\t\tthresholds")
 		try:
 			time.sleep(nexttime-time.time())
 		except Exception:

@@ -16,4 +16,4 @@ def debugmsg(msg):
 		printerrmsg(msg)
 
 def printmsg(msg):
-	print "%f\t\t%s" % (gettime(),msg)
+	print "%.3f\t\t%s" % (gettime(),msg)
