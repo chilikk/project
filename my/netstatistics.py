@@ -6,6 +6,8 @@ class NetStatistics(object):
 		self.prevtime, self.prevload = (None, None)
 		self.netstate = None
 		self.stdevthreshold = None
+		self.medianthreshold = None
+		self.dumbthreshold = None
 		self.alarm = ""
 		self.alarmprobability = 0
 		self.attacktype = ""
