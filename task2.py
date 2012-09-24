@@ -4,22 +4,14 @@ from my.netstatistics import NetStatistics
 from multiprocessing import Pool
 import time, sys, pickle
 from my.debug import debugmsg, printmsg, printerrmsg
-from defaults import fileRoutersData, pollinterval, num_samples
+from defaults import pollinterval, num_samples
+from main import loadRouters
 
 def poll(routerid):
 	return routers[routerid].pollLinksLoad()
 
 if __name__=='__main__':
-	try:
-		f = open(fileRoutersData, 'r')
-		routers = pickle.load(f)
-		f.close()
-		routers = [router.restoresnmpiface() for router in routers]
-	except Exception:
-		from my.debug import printerrmsg
-		printerrmsg('routers.dat not found! run main.py first')
-		import sys
-		sys.exit()
+	routers = loadRouters()
 	stats = NetStatistics()
 	nrouters = len(routers)
 	pool = Pool(processes = nrouters)

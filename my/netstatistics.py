@@ -17,16 +17,18 @@ class NetStatistics(object):
 		self.methodprobability = 100./len(self.methods)
 		
 	def addSample(self,pollresult):
-		avgtime, totload = self.calc_totload(pollresult)
+		avgtime, totload, totpps = self.calc_totload(pollresult)
 		if self.netstate:
 			self.netstate = self.calc_bandwidth(avgtime, totload)
 			if len(self.net_states)==self.states_to_store:
 				self.detectOutlier()
-				del self.net_states[0]
-			self.net_states.append(self.netstate)
+				if not self.alarm:
+					del self.net_states[0]
+			if not self.alarm:
+				self.net_states.append(self.netstate)
 		else:
 			self.netstate = "start"
-		self.prevtime, self.prevload = (avgtime, totload)
+		self.prevtime, self.prevload, self.pps = (avgtime, totload, totpps)
 	
 	def getNetState(self):
 		return (self.netstate, self.stdevthreshold, self.alarm)
@@ -38,13 +40,13 @@ class NetStatistics(object):
 		return (self.alarmprobability, self.attacktype)
 
 	def calc_totload(self,pollresult):
-		avgtime, totload = (.0,0)
-                for polltime, loads in pollresult:
+		avgtime, totload, totpps = (.0,0,0)
+                for polltime, load, packetload in pollresult:
                         avgtime+=polltime
-                        for load in loads:
-                                totload+=int(load)
+                        totload+=int(load)
+			totpps+=int(packetload)
                 avgtime/=len(pollresult)
-		return (avgtime, totload)
+		return (avgtime, totload, totpps)
 
 	def calc_bandwidth(self, avgtime, totload):
                 return int((totload-self.prevload)/(avgtime-self.prevtime))
