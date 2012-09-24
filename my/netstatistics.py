@@ -2,6 +2,7 @@ from defaults import storeNetStates
 
 class NetStatistics(object):
 	def __init__(self, **kwargs):
+		self.state = 'initialization' # also 'training', 'detection'
 		self.net_states = []
 		self.prevtime, self.prevload = (None, None)
 		self.netstate = None
@@ -20,16 +21,20 @@ class NetStatistics(object):
 		
 	def addSample(self,pollresult):
 		avgtime, totload, totpps = self.calc_totload(pollresult)
-		if self.netstate:
+		if self.state == 'initialization':
+			self.netstate = 'start'
+			self.state = 'training'
+		elif self.state == 'training':
 			self.netstate = self.calc_bandwidth(avgtime, totload)
+			self.net_states.append(self.netstate)
 			if len(self.net_states)==self.states_to_store:
-				self.detectOutlier()
-				if not self.alarm:
-					del self.net_states[0]
+				self.state = 'detection'
+		elif self.state == 'detection':
+			self.netstate = self.calc_bandwidth(avgtime, totload)
+			self.detectOutlier()
 			if not self.alarm:
+				del self.net_states[0]
 				self.net_states.append(self.netstate)
-		else:
-			self.netstate = "start"
 		self.prevtime, self.prevload, self.pps = (avgtime, totload, totpps)
 	
 	def getNetState(self):
