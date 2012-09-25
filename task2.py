@@ -24,7 +24,7 @@ if __name__=='__main__':
 			if threshold:
 				printmsg("\t%d\t\t%d\t%s" % (netstate, threshold, alarm))
 			else:
-				printmsg("\t%d" % netstate)
+				printerrmsg("\t%d" % netstate)
 		else:
 			printerrmsg("start polling\ntime\t\tnetwork load\talarm threshold")
 		try:

@@ -12,7 +12,7 @@ def poll(routerid):
 
 if __name__=='__main__':
 	routers = loadRouters()
-	stats = NetStatistics(methods=('stdev','median','dumb'))
+	stats = NetStatistics(methods=('stdev','median','made'))
 	nrouters = len(routers)
 	pool = Pool(processes = nrouters)
 	for i in range(num_samples):
@@ -20,15 +20,15 @@ if __name__=='__main__':
 		sample = pool.map(poll, range(nrouters))
 		stats.addSample(sample)
 		netstate, stdevthreshold, alarm = stats.getNetState()
-		medianthreshold, dumbthreshold = stats.getThresholds()
+		medianthreshold, madethreshold = stats.getThresholds()
 		if netstate != "start":
 			if stdevthreshold:
-				msg = "%d\t(%d\t%d\t%d)\t%s" % (netstate, stdevthreshold, medianthreshold, dumbthreshold, alarm)
+				msg = "%d\t(%d\t%d\t%d)\t%s" % (netstate, stdevthreshold, medianthreshold, madethreshold, alarm)
 				if alarm=='ALARM':
 					msg+="\t%d\t%s" % stats.getAlarmParams()
+				printmsg(msg)
 			else:
-				msg = "\t%d" % netstate
-			printmsg(msg)
+				printerrmsg("\t%d" % netstate)
 		else:
 			printerrmsg("start polling\ntime\t\tnetwork load\t\tthresholds")
 		try:

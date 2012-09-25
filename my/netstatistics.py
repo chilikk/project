@@ -8,7 +8,7 @@ class NetStatistics(object):
 		self.netstate = None
 		self.stdevthreshold = None
 		self.medianthreshold = None
-		self.dumbthreshold = None
+		self.madethreshold = None
 		self.alarm = ""
 		self.alarmprobability = 0
 		self.attacktype = ""
@@ -41,7 +41,7 @@ class NetStatistics(object):
 		return (self.netstate, self.stdevthreshold, self.alarm)
 
 	def getThresholds(self):
-		return (self.medianthreshold, 0)
+		return (self.medianthreshold, self.madethreshold)
 
 	def getAlarmParams(self):
 		return (self.alarmprobability, self.attacktype)
@@ -64,16 +64,17 @@ class NetStatistics(object):
 			self.alarmprobability += self.stdev_method()
 		if ('median' in self.methods):
 			self.alarmprobability += self.median_rule()
-		if ('dumb' in self.methods):
-			self.alarmprobability += self.dumb_method()
+		if ('made' in self.methods):
+			self.alarmprobability += self.made_method()
 		self.alarmprobability *= self.methodprobability
 		self.alarmprobability = int(self.alarmprobability)
 		self.alarm = ("ALARM" if self.alarmprobability > 50 else "")
 		
 	def stdev_method(self):
 		from numpy import std, mean
-		stdev = std(self.net_states)
-		self.stdevthreshold = mean(self.net_states) + 3*stdev
+		values = self.net_states
+		stdev = std(values)
+		self.stdevthreshold = mean(values) + 3*stdev
 		return (1 if self.netstate >= self.stdevthreshold else 0)
 
 	def median_rule(self):
@@ -84,5 +85,10 @@ class NetStatistics(object):
 		self.medianthreshold = median + int(2.3*iqr)
 		return (1 if self.netstate >= self.medianthreshold else 0)
 
-	def dumb_method(self):
-		return 1
+	def made_method(self):
+		from numpy import median
+		values = self.net_states
+		median_value = median(values)
+		made = 1.483 * median([abs(v-median_value) for v in values])
+		self.madethreshold = median_value + 3*made
+		return (1 if self.netstate >= self.madethreshold else 0)
