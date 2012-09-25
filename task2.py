@@ -22,9 +22,9 @@ if __name__=='__main__':
 		netstate, threshold, alarm = stats.getNetState()
 		if netstate != "start":
 			if threshold:
-				printmsg("\t%d\t\t%d\t%s" % (netstate, threshold, alarm))
+				printmsg("\t%7d\t|  %7d  |  %s" % (netstate, threshold, alarm))
 			else:
-				printerrmsg("\t%d" % netstate)
+				printerrmsg("\t%7d" % netstate)
 		else:
 			printerrmsg("start polling\ntime\t\tnetwork load\talarm threshold")
 		try:
