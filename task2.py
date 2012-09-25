@@ -22,11 +22,11 @@ if __name__=='__main__':
 		netstate, threshold, alarm = stats.getNetState()
 		if netstate != "start":
 			if threshold:
-				printmsg("\t%7d\t|  %7d  |  %s" % (netstate, threshold, alarm))
+				printmsg("%7d\t|  %7d  |  %s" % (netstate, threshold, alarm))
 			else:
 				printerrmsg("\t%7d" % netstate)
 		else:
-			printerrmsg("start polling\ntime\t\tnetwork load\talarm threshold")
+			printerrmsg("start polling\n--------------------------\ntime\t\tnetwork load\t\talarm threshold")
 		try:
 			time.sleep(nexttime-time.time())
 		except Exception:
