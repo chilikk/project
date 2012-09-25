@@ -28,7 +28,7 @@ if __name__=='__main__':
 					msg+="\t%3d\t%s" % stats.getAlarmParams()
 				printmsg(msg)
 			else:
-				printerrmsg("%7d" % netstate)
+				printerrmsg("%7d\t\t|" % netstate)
 		else:
 			printerrmsg("start polling\n-----------------------------\ntime\t\tnetwork load\t|\tthresholds")
 		try:
