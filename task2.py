@@ -26,7 +26,7 @@ if __name__=='__main__':
 			else:
 				printerrmsg("%7d" % netstate)
 		else:
-			printerrmsg("start polling\n-----------------------------\ntime\t\tnetwork load\t\talarm threshold")
+			printerrmsg("start polling\n-----------------------------\ntime\t\tnetwork load\t|alarm threshold")
 		try:
 			time.sleep(nexttime-time.time())
 		except Exception:
