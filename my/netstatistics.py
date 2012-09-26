@@ -72,13 +72,13 @@ class NetStatistics(object):
 		
 	def stdev_method(self):
 		from numpy import std, mean
-		values = self.net_states
+		values = [i[0] for i in self.net_states]
 		stdev = std(values)
 		self.stdevthreshold = mean(values) + 3*stdev
 		return (1 if self.netstate[0] >= self.stdevthreshold else 0)
 
 	def median_rule(self):
-		values = sorted(self.net_states)
+		values = sorted([i[0] for i in self.net_states])
 		nval1 = len(values)+1
 		median = values[nval1/2-1]
 		iqr = values[nval1*3/4-1]-values[nval1/4-1]
@@ -87,7 +87,7 @@ class NetStatistics(object):
 
 	def made_method(self):
 		from numpy import median
-		values = self.net_states
+		values = [i[0] for i in self.net_states]
 		median_value = median(values)
 		made = 1.483 * median([abs(v-median_value) for v in values])
 		self.madethreshold = median_value + 3*made
