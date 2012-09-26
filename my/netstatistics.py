@@ -95,4 +95,6 @@ class NetStatistics(object):
 
 	def attack_type(self):
 		values = [i[1] for i in self.net_states]
-		return ("DoS attack" if self.netstate[1] <= mean(values)-3*std(values) else "Flash crowd")
+		threshold = mean(values)-3*std(values)
+		threshold = threshold if threshold>=0 else 0
+		return ("DoS attack" if self.netstate[1] <= threshold else "Flash crowd")+" (packet size threshold %d)" % threshold

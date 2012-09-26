@@ -23,12 +23,12 @@ if __name__=='__main__':
 		packetsize, medianthreshold, madethreshold = stats.getAdvParams()
 		if stats.netstate != "start":
 			if stdevthreshold:
-				msg = "%7d %4d\t\t| %7d  %7d  %7d |  %s" % (netstate, packetsize, stdevthreshold, medianthreshold, madethreshold, alarm)
+				msg = "%7d\t\t%4d\t\t| %7d  %7d  %7d |  %s" % (netstate, packetsize, stdevthreshold, medianthreshold, madethreshold, alarm)
 				if alarm=='ALARM':
 					msg+="\t%3d\t%s" % stats.getAlarmParams()
 				printmsg(msg)
 			else:
-				printerrmsg("%7d\t%4d\t\t|" % (netstate, packetsize))
+				printerrmsg("%7d\t\t%4d\t\t|" % (netstate, packetsize))
 		else:
 			printerrmsg("start polling\n-----------------------------\ntime\t\tnetwork load, packetsize\t|\tthresholds")
 		try:
