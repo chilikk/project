@@ -13,10 +13,8 @@ class NetStatistics(object):
 		self.alarmprobability = 0
 		self.attacktype = ""
 		self.states_to_store = storeNetStates
-		if 'methods' in kwargs:
-			self.methods = kwargs['methods']
-		else:
-			self.methods = ('stdev',)
+		self.advanced = (kwargs['advanced'] if 'advanced' in kwargs else 0)
+		self.methods = (kwargs['methods'] if 'methods' in kwargs else ('stdev',))
 		self.methodprobability = 100./len(self.methods)
 		
 	def addSample(self,pollresult):
@@ -25,12 +23,12 @@ class NetStatistics(object):
 			self.netstate = 'start'
 			self.state = 'training'
 		elif self.state == 'training':
-			self.netstate = self.calc_bandwidth(avgtime, totload)
+			self.netstate = self.calc_bandwidth(avgtime, totload, totpps)
 			self.net_states.append(self.netstate)
 			if len(self.net_states)==self.states_to_store:
 				self.state = 'detection'
 		elif self.state == 'detection':
-			self.netstate = self.calc_bandwidth(avgtime, totload)
+			self.netstate = self.calc_bandwidth(avgtime, totload, totpps)
 			self.detectOutlier()
 			if not self.alarm:
 				del self.net_states[0]
@@ -38,10 +36,10 @@ class NetStatistics(object):
 		self.prevtime, self.prevload, self.pps = (avgtime, totload, totpps)
 	
 	def getNetState(self):
-		return (self.netstate, self.stdevthreshold, self.alarm)
+		return (self.netstate[0], self.stdevthreshold, self.alarm)
 
-	def getThresholds(self):
-		return (self.medianthreshold, self.madethreshold)
+	def getAdvParams(self):
+		return (self.netstate[1], self.medianthreshold, self.madethreshold)
 
 	def getAlarmParams(self):
 		return (self.alarmprobability, self.attacktype)
@@ -55,8 +53,10 @@ class NetStatistics(object):
                 avgtime/=len(pollresult)
 		return (avgtime, totload, totpps)
 
-	def calc_bandwidth(self, avgtime, totload):
-                return int((totload-self.prevload)/(avgtime-self.prevtime))
+	def calc_bandwidth(self, avgtime, totload, totpps):
+                bandwidth = (totload-self.prevload)*1./(avgtime-self.prevtime)
+		packetsize = None if totpps==0 else (totload-self.prevload)*1./(totpps-self.prevpps)
+		return (int(bandwidth), int(packetsize))
 
 	def detectOutlier(self):
 		self.alarmprobability = 0.
@@ -75,7 +75,7 @@ class NetStatistics(object):
 		values = self.net_states
 		stdev = std(values)
 		self.stdevthreshold = mean(values) + 3*stdev
-		return (1 if self.netstate >= self.stdevthreshold else 0)
+		return (1 if self.netstate[0] >= self.stdevthreshold else 0)
 
 	def median_rule(self):
 		values = sorted(self.net_states)
@@ -83,7 +83,7 @@ class NetStatistics(object):
 		median = values[nval1/2-1]
 		iqr = values[nval1*3/4-1]-values[nval1/4-1]
 		self.medianthreshold = median + int(2.3*iqr)
-		return (1 if self.netstate >= self.medianthreshold else 0)
+		return (1 if self.netstate[0] >= self.medianthreshold else 0)
 
 	def made_method(self):
 		from numpy import median
@@ -91,4 +91,4 @@ class NetStatistics(object):
 		median_value = median(values)
 		made = 1.483 * median([abs(v-median_value) for v in values])
 		self.madethreshold = median_value + 3*made
-		return (1 if self.netstate >= self.madethreshold else 0)
+		return (1 if self.netstate[0] >= self.madethreshold else 0)
