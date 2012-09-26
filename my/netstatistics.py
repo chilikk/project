@@ -1,4 +1,5 @@
 from defaults import storeNetStates
+from numpy import std, mean, median
 
 class NetStatistics(object):
 	def __init__(self, **kwargs):
@@ -13,7 +14,6 @@ class NetStatistics(object):
 		self.alarmprobability = 0
 		self.attacktype = ""
 		self.states_to_store = storeNetStates
-		self.advanced = (kwargs['advanced'] if 'advanced' in kwargs else 0)
 		self.methods = (kwargs['methods'] if 'methods' in kwargs else ('stdev',))
 		self.methodprobability = 100./len(self.methods)
 		
@@ -33,6 +33,8 @@ class NetStatistics(object):
 			if not self.alarm:
 				del self.net_states[0]
 				self.net_states.append(self.netstate)
+			else:
+				self.attacktype = self.attack_type() if self.netstate[1]!=0 else ""
 		self.prevtime, self.prevload, self.prevpps = (avgtime, totload, totpps)
 	
 	def getNetState(self):
@@ -71,7 +73,6 @@ class NetStatistics(object):
 		self.alarm = ("ALARM" if self.alarmprobability > 50 else "")
 		
 	def stdev_method(self):
-		from numpy import std, mean
 		values = [i[0] for i in self.net_states]
 		stdev = std(values)
 		self.stdevthreshold = mean(values) + 3*stdev
@@ -80,15 +81,18 @@ class NetStatistics(object):
 	def median_rule(self):
 		values = sorted([i[0] for i in self.net_states])
 		nval1 = len(values)+1
-		median = values[nval1/2-1]
+		median_value = values[nval1/2-1]
 		iqr = values[nval1*3/4-1]-values[nval1/4-1]
-		self.medianthreshold = median + int(2.3*iqr)
+		self.medianthreshold = median_value + int(2.3*iqr)
 		return (1 if self.netstate[0] >= self.medianthreshold else 0)
 
 	def made_method(self):
-		from numpy import median
 		values = [i[0] for i in self.net_states]
 		median_value = median(values)
 		made = 1.483 * median([abs(v-median_value) for v in values])
 		self.madethreshold = median_value + 3*made
 		return (1 if self.netstate[0] >= self.madethreshold else 0)
+
+	def attack_type(self):
+		values = [i[1] for i in self.net_states]
+		return ("DoS attack" if self.netstate[1] <= mean(values)-3*std(values) else "Flash crowd")
