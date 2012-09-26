@@ -21,7 +21,7 @@ if __name__=='__main__':
 		stats.addSample(sample)
 		netstate, stdevthreshold, alarm = stats.getNetState()
 		packetsize, medianthreshold, madethreshold = stats.getAdvParams()
-		if netstate != "start":
+		if stats.netstate != "start":
 			if stdevthreshold:
 				msg = "%7d %4d\t\t| %7d  %7d  %7d |  %s" % (netstate, packetsize, stdevthreshold, medianthreshold, madethreshold, alarm)
 				if alarm=='ALARM':

@@ -20,7 +20,7 @@ if __name__=='__main__':
 		sample = pool.map(poll, range(nrouters))
 		stats.addSample(sample)
 		netstate, threshold, alarm = stats.getNetState()
-		if netstate != "start":
+		if stats.netstate != "start":
 			if threshold:
 				printmsg("%7d\t\t|  %7d  |  %s" % (netstate, threshold, alarm))
 			else:
