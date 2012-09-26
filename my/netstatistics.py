@@ -4,7 +4,7 @@ class NetStatistics(object):
 	def __init__(self, **kwargs):
 		self.state = 'initialization' # also 'training', 'detection'
 		self.net_states = []
-		self.prevtime, self.prevload = (None, None)
+		self.prevtime, self.prevload, self.prevpps = (None, None, None)
 		self.netstate = None
 		self.stdevthreshold = None
 		self.medianthreshold = None
@@ -33,7 +33,7 @@ class NetStatistics(object):
 			if not self.alarm:
 				del self.net_states[0]
 				self.net_states.append(self.netstate)
-		self.prevtime, self.prevload, self.pps = (avgtime, totload, totpps)
+		self.prevtime, self.prevload, self.prevpps = (avgtime, totload, totpps)
 	
 	def getNetState(self):
 		return (self.netstate[0], self.stdevthreshold, self.alarm)
