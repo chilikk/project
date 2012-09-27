@@ -8,7 +8,10 @@ from defaults import pollinterval, num_samples
 from main import loadRouters
 
 def poll(routerid):
-	return routers[routerid].pollLinksOctetsPackets()
+	try:
+		return routers[routerid].pollLinksOctetsPackets()
+	except Exception:
+		return None
 
 if __name__=='__main__':
 	routers = loadRouters()
@@ -18,7 +21,11 @@ if __name__=='__main__':
 	for i in range(num_samples):
 		nexttime = time.time()+pollinterval
 		sample = pool.map(poll, range(nrouters))
-		stats.addSample(sample)
+		try:
+			stats.addSample(sample)
+		except Exception:
+			printerrmsg("Router(s) didn't respond")
+			continue
 		netstate, stdevthreshold, alarm = stats.getNetState()
 		packetsize, medianthreshold, madethreshold = stats.getAdvParams()
 		if stats.netstate != "start":

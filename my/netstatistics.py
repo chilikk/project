@@ -18,7 +18,10 @@ class NetStatistics(object):
 		self.methodprobability = 100./len(self.methods)
 		
 	def addSample(self,pollresult):
-		avgtime, totload, totpps = self.calc_totload(pollresult)
+		try:
+			avgtime, totload, totpps = self.calc_totload(pollresult)
+		except Exception:
+			raise
 		if self.state == 'initialization':
 			self.netstate = 'start'
 			self.state = 'training'
@@ -48,10 +51,13 @@ class NetStatistics(object):
 
 	def calc_totload(self,pollresult):
 		avgtime, totload, totpps = (.0,0,0)
-                for polltime, load, packetload in pollresult:
-                        avgtime+=polltime
-                        totload+=int(load)
-			totpps+=int(packetload)
+		try:
+	                for polltime, load, packetload in pollresult:
+	                        avgtime+=polltime
+	                        totload+=int(load)
+				totpps+=int(packetload)
+		except Exception:
+			raise
                 avgtime/=len(pollresult)
 		return (avgtime, totload, totpps)
 

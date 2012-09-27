@@ -67,14 +67,20 @@ class RouterSnmp(Router):
 	        self.interfaces = self.snmpiface.getBulk(self.snmpiface.oid_ifDescr,self.num_ifs).values()
 
 	def pollLinksLoad(self):
-	        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
+		try:
+		        currLinksLoad=self.snmpiface.getBulk(self.snmpiface.oid_ifInOctets,self.num_ifs).values()
+		except Exception:
+			raise
 		currTime = time()	
 		return (currTime, sum([ int(item) for item in currLinksLoad ]), 0)
 
 	def pollLinksOctetsPackets(self):
                 oid = self.snmpiface.oid_ifInOctets
 		bulksize = 5*self.num_ifs
-		currLinksLoad=self.snmpiface.getBulk(oid,bulksize,dontmatch=1)
+		try:
+			currLinksLoad=self.snmpiface.getBulk(oid,bulksize,dontmatch=1)
+		except Exception:
+			raise
                 octets, packets = (0,0)
                 for key in currLinksLoad:
                         if key[:len(oid)]==oid:
