@@ -63,7 +63,7 @@ class NetStatistics(object):
 
 	def calc_bandwidth(self, avgtime, totload, totpps):
                 bandwidth = (totload-self.prevload)*1./(avgtime-self.prevtime)
-		packetsize = None if totpps==0 else (totload-self.prevload)*1./(totpps-self.prevpps)
+		packetsize = 0 if totpps==0 else (totload-self.prevload)*1./(totpps-self.prevpps)
 		return (int(bandwidth), int(packetsize))
 
 	def detectOutlier(self):
