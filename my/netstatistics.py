@@ -62,6 +62,10 @@ class NetStatistics(object):
 		return (avgtime, totload, totpps)
 
 	def calc_bandwidth(self, avgtime, totload, totpps):
+		while totload <= self.prevload:
+			totload+=2**32
+		while totpps <= self.prevpps:
+			totpps+=2**32
                 bandwidth = (totload-self.prevload)*1./(avgtime-self.prevtime)
 		packetsize = 0 if totpps==0 else (totload-self.prevload)*1./(totpps-self.prevpps)
 		return (int(bandwidth), int(packetsize))
