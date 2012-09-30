@@ -57,25 +57,6 @@ class SnmpIface(object):
 			print e.message
 			return
 	
-	def _getObj(self,oid,gettype,**kwargs):
-		oid = ObjectIdentifier(oid).asTuple()
-
-		if gettype=='getnext':
-			errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().nextCmd(self.authentication, self.transport, oid)
-		elif gettype=='get':
-			errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().getCmd(self.authentication, self.transport, oid)
-		elif gettype=='getbulk':
-			bulkSize = kwargs['bulkSize'] if 'bulkSize' in kwargs else 1
-			errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().bulkCmd(self.authentication, self.transport, 0, bulkSize, oid)
-		else:
-			raise Exception('Unknown snmp get type! Should be get|getnext|getbulk')
-
-		if not response:
-			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
-			raise SnmpException('An error occured: '+errorDescription)
-		
-		return response
-
 	def parseResponse(self, response,oid=False):
 		result={}
 		for row in response:
@@ -85,27 +66,30 @@ class SnmpIface(object):
 		return result
 
 	def getSubtree(self,oid):
-		try:
-			response = self._getObj(oid,'getnext')
-		except Exception:
-			raise
+		oid = ObjectIdentifier(oid).asTuple()
+		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().nextCmd(self.authentication, self.transport, oid)
+		if not response:
+			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
+			raise SnmpException('An error occured: '+errorDescription)
 		return self.parseResponse(response)
 
 	def getObject(self,oid):
-		try:
-			response = self._getObj(oid,'get')
-		except Exception:
-			raise
+		oid = ObjectIdentifier(oid).asTuple()
+		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().getCmd(self.authentication, self.transport, oid)
+		if not response:
+			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
+			raise SnmpException('An error occured: '+errorDescription)
 		result = self.parseResponse((response,),oid)
 		if result:
 			return result.values()[0]
 		raise Exception('Object with given OID does not exist or something went wrong!')
 
 	def getBulk(self, oid, bulkSize, **kwargs):
-		try:
-			response = self._getObj(oid,'getbulk', bulkSize = bulkSize+1)
-		except Exception:
-			raise
+		oid = ObjectIdentifier(oid).asTuple()
+		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().bulkCmd(self.authentication, self.transport, 0, bulkSize+1, oid)
+		if not response:
+			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
+			raise SnmpException('An error occured: '+errorDescription)
 		if 'dontmatch' in kwargs and kwargs['dontmatch']==1:
 			return self.parseResponse(response)
 		else:

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from my.topology import Topology
-from my.debug import debugmsg
+from my.messages import debugmsg
 from multiprocessing import Pool
 import pickle
 from defaults import initialRouter, fileRoutersData
@@ -25,7 +25,7 @@ def loadRouters():
                 f.close()
                 routers = [router.restoresnmpiface() for router in routers]
         except Exception:
-                from my.debug import printerrmsg
+                from my.messages import printerrmsg
                 printerrmsg(fileRoutersData+' not found! run main.py first')
                 import sys
                 sys.exit()

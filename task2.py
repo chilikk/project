@@ -3,7 +3,7 @@
 from my.netstatistics import NetStatistics
 from multiprocessing import Pool
 import time
-from my.debug import printmsg, printerrmsg
+from my.messages import printmsg, printerrmsg
 from defaults import pollinterval, num_samples
 from main import loadRouters
 

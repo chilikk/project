@@ -54,17 +54,36 @@ class RouterSnmp(Router):
 		return self
 
 	def getTopologyInfo(self):
-		self.neighbours = self.snmpiface.getSubtree(self.snmpiface.oid_ipRouteNextHop).values()
-	        self.ips = self.snmpiface.getSubtree(self.snmpiface.oid_ipAdEntAddr).values()
-	        self.neighbours = list(set(self.neighbours).difference(self.ips))
+		for i in range(10):
+			try:
+				self.neighbours = self.snmpiface.getSubtree(self.snmpiface.oid_ipRouteNextHop).values()
+			        self.ips = self.snmpiface.getSubtree(self.snmpiface.oid_ipAdEntAddr).values()
+			        self.neighbours = list(set(self.neighbours).difference(self.ips))
+				i=0
+				break
+			except Exception:
+				pass
+		if i>0:
+			raise Exception("Router did not respond for 10 retries")
 
 	def getNumIfs(self):
-	        self.num_ifs = int(self.snmpiface.getObject(self.snmpiface.oid_ifNumber))
+		try:
+	        	self.num_ifs = int(self.snmpiface.getObject(self.snmpiface.oid_ifNumber))
+		except Exception:
+			raise
 
 	def getInfo(self):
-		self.name = self.snmpiface.getObject(self.snmpiface.oid_sysName)
-		self.getNumIfs()
-	        self.interfaces = self.snmpiface.getBulk(self.snmpiface.oid_ifDescr,self.num_ifs).values()
+		for i in range(10):
+			try:
+				self.name = self.snmpiface.getObject(self.snmpiface.oid_sysName)
+				self.getNumIfs()
+				self.interfaces = self.snmpiface.getBulk(self.snmpiface.oid_ifDescr,self.num_ifs).values()
+				i=0
+				break
+			except Exception:
+				pass
+		if i>0:
+			raise Exception("Router did not respond for 10 retries")
 
 	def pollLinksLoad(self):
 		try:
