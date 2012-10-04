@@ -73,8 +73,7 @@ class SnmpIface(object):
 
 	def getSubtree(self,oid):
 		""" get the whole subtree with getnext, like snmpwalk """
-		oid = ObjectIdentifier(oid).asTuple()
-		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().nextCmd(self.authentication, self.transport, oid)
+		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().nextCmd(self.authentication, self.transport, ObjectIdentifier(oid).asTuple())
 		if not response:
 			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
 			raise SnmpException('An error occured: '+errorDescription)
@@ -82,8 +81,7 @@ class SnmpIface(object):
 
 	def getObject(self,oid):
 		""" get the single object with get """
-		oid = ObjectIdentifier(oid).asTuple()
-		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().getCmd(self.authentication, self.transport, oid)
+		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().getCmd(self.authentication, self.transport, ObjectIdentifier(oid).asTuple())
 		if not response:
 			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
 			raise SnmpException('An error occured: '+errorDescription)
@@ -94,8 +92,7 @@ class SnmpIface(object):
 
 	def getBulk(self, oid, bulkSize, **kwargs):
 		""" get the set of object with getbulk. should be passed "dontmatch=1" if the objects are not within same subtree """
-		oid = ObjectIdentifier(oid).asTuple()
-		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().bulkCmd(self.authentication, self.transport, 0, bulkSize+1, oid)
+		errorIndication, errorStatus, errorIndex, response = cmdgen.CommandGenerator().bulkCmd(self.authentication, self.transport, 0, bulkSize+1, ObjectIdentifier(oid).asTuple())
 		if not response:
 			errorDescription = "%s: %s %s" % (errorIndex, errorStatus, errorIndication)
 			raise SnmpException('An error occured: '+errorDescription)
